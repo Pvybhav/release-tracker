@@ -9,7 +9,12 @@ import arrowDown from "react-useanimations/lib/arrowDown";
 import arrowUp from "react-useanimations/lib/arrowUp";
 import TeamData from "../data/TeamData";
 
-const additionalStepNames = ["PR-IP", "FR", "QC"];
+const additionalStepNames = ["PR-IP", "FR", "QG"];
+const additionalStepDetails = [
+  "Pre-Release IP",
+  "Final Release",
+  "Quality Gate",
+];
 function ListView() {
   const resizeRef = useRef(false);
   const chartRef = useRef();
@@ -121,13 +126,13 @@ function ListView() {
 
         switch (seriesIndex) {
           case cardDetails.noOfPRs + additionalStages - 1:
-            return additionalStepNames.at(-1);
+            return additionalStepDetails.at(-1);
           case cardDetails.noOfPRs + additionalStages - 2:
-            return additionalStepNames.at(-2);
+            return additionalStepDetails.at(-2);
           case cardDetails.noOfPRs + additionalStages - 3:
-            return additionalStepNames.at(-3);
+            return additionalStepDetails.at(-3);
           default:
-            return `PR - ${seriesIndex + 1}`;
+            return `Pre-Release - ${seriesIndex + 1}`;
         }
       }
     )[cardDetails.currentStep - 1];
