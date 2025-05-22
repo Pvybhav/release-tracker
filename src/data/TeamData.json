@@ -7,14 +7,14 @@
     "dueOn": "15/05/2025"
   },
   {
-    "teamName": "Medication",
+    "teamName": "Security",
     "currentStep": 2,
     "noOfPRs": 3,
     "startedOn": "12/05/2025",
     "dueOn": "17/05/2025"
   },
   {
-    "teamName": "Nursing",
+    "teamName": "Com",
     "currentStep": 5,
     "noOfPRs": 2,
     "startedOn": "15/05/2025",

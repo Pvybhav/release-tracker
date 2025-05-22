@@ -1,57 +1,93 @@
-import { Fragment, useEffect, useRef } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { TrashIcon } from "../icons/TrashIcon";
 import { PencilSquareIcon } from "../icons/PencilSquareIcon";
 import { Save } from "../icons/Save";
-import { useState } from "react";
 
-function TeamList({ teams, setTeams }) {
+function TeamList({ setTeams }) {
+  const [teams, setLocalTeams] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [teamToDelete, setTeamToDelete] = useState(null);
 
   const inputRef = useRef({});
 
+  useEffect(() => {
+    const fetchTeams = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/team");
+        const data = await response.json();
+        setLocalTeams(data);
+        setTeams(data);
+      } catch (error) {
+        console.error("Failed to fetch teams:", error);
+      }
+    };
+    fetchTeams();
+  }, [setTeams]);
+
   const startEditing = (id) => {
-    setTeams((prevTeams) =>
+    setLocalTeams((prevTeams) =>
       prevTeams.map((team) =>
         team.id === id ? { ...team, editing: true } : team
       )
     );
   };
 
-  const stopEditing = (id) => {
-    setTeams((prevTeams) =>
-      prevTeams.map((team) =>
-        team.id === id ? { ...team, editing: false } : team
-      )
-    );
+  const stopEditing = async (id) => {
+    const editingTeam = teams.find((team) => team.id === id);
+    if (!editingTeam) return;
+
+    try {
+      const response = await fetch(`http://localhost:3000/team/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(editingTeam),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update team");
+      }
+
+      const updatedTeam = await response.json();
+      setLocalTeams((prevTeams) =>
+        prevTeams.map((team) =>
+          team.id === id ? { ...team, ...updatedTeam, editing: false } : team
+        )
+      );
+    } catch (error) {
+      console.error("Failed to update team:", error);
+    }
   };
 
   const updateTeam = (id, updatedTeam) => {
-    setTeams((prevTeams) =>
+    setLocalTeams((prevTeams) =>
       prevTeams.map((team) =>
         team.id === id ? { ...team, ...updatedTeam } : team
       )
     );
   };
 
-  const changeTeam = (id, delta) => {
-    setTeams((prevTeams) =>
-      prevTeams.map((team) =>
-        team.id === id ? { ...team, noOfPRs: team.noOfPRs + delta } : team
-      )
-    );
-  };
+  const deleteTeam = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/team/${teamToDelete}`,
+        {
+          method: "DELETE",
+        }
+      );
 
-  const deleteTeam = (id) => {
-    setIsOpen(true);
-    setTeamToDelete(id);
-  };
+      if (!response.ok) {
+        throw new Error("Failed to delete team");
+      }
 
-  const confirmDelete = () => {
-    setTeams((prevTeams) =>
-      prevTeams.filter((team) => team.id !== teamToDelete)
-    );
-    setIsOpen(false);
+      setLocalTeams((prevTeams) =>
+        prevTeams.filter((team) => team.id !== teamToDelete)
+      );
+      setIsOpen(false);
+    } catch (error) {
+      console.error("Failed to delete team:", error);
+    }
   };
 
   const cancelDelete = () => {
@@ -84,7 +120,7 @@ function TeamList({ teams, setTeams }) {
         <div className="w-full">
           <div className="grid grid-cols-5 items-center border-b border-gray-200 py-2">
             <div className="font-bold text-left pl-6">Team Name</div>
-            <div className="font-bold">Number of Pull Requests</div>
+            <div className="font-bold">Number of Pre Releases</div>
             <div className="font-bold">Current Step</div>
             <div className="font-bold">Actions</div>
           </div>
@@ -117,12 +153,6 @@ function TeamList({ teams, setTeams }) {
                     )}
                   </div>
                   <div className="flex items-center justify-center">
-                    {/* <button
-                      className="bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded-l"
-                      onClick={() => changeTeam(team.id, -1)}
-                    >
-                      -
-                    </button> */}
                     {team.editing ? (
                       <input
                         type="number"
@@ -137,24 +167,8 @@ function TeamList({ teams, setTeams }) {
                     ) : (
                       <div className="px-2 py-1">{team.noOfPRs}</div>
                     )}
-                    {/* <button
-                      className="bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded-r"
-                      onClick={() => changeTeam(team.id, 1)}
-                    >
-                      +
-                    </button> */}
                   </div>
                   <div className="flex items-center justify-center">
-                    {/* <button
-                      className="bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded-l"
-                      onClick={() =>
-                        updateTeam(team.id, {
-                          currentStep: team.currentStep - 1,
-                        })
-                      }
-                    >
-                      -
-                    </button> */}
                     {team.editing ? (
                       <input
                         type="number"
@@ -169,16 +183,6 @@ function TeamList({ teams, setTeams }) {
                     ) : (
                       <div className="px-2 py-1">{team.currentStep}</div>
                     )}
-                    {/* <button
-                      className="bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded-r"
-                      onClick={() =>
-                        updateTeam(team.id, {
-                          currentStep: team.currentStep + 1,
-                        })
-                      }
-                    >
-                      +
-                    </button> */}
                   </div>
                   <div className="flex items-center gap-2 justify-center">
                     <button
@@ -206,7 +210,10 @@ function TeamList({ teams, setTeams }) {
                     {!team.editing && (
                       <button
                         className="bg-red-500 hover:bg-red-700 text-white px-2 py-1 rounded transition-all duration-300 ease-in-out ml-2"
-                        onClick={() => deleteTeam(team.id)}
+                        onClick={() => {
+                          setTeamToDelete(team.id);
+                          setIsOpen(true);
+                        }}
                       >
                         <span className="flex items-center gap-1">
                           <TrashIcon className="w-5 h-5" />
@@ -241,7 +248,7 @@ function TeamList({ teams, setTeams }) {
                 <button
                   type="button"
                   className="inline-flex justify-center px-4 py-2 text-sm font-medium text-red-900 bg-red-100 border border-transparent rounded-md hover:bg-red-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-500"
-                  onClick={confirmDelete}
+                  onClick={deleteTeam}
                 >
                   Confirm
                 </button>

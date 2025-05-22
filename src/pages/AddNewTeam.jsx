@@ -1,34 +1,43 @@
 import React, { useState } from "react";
-import { NavLink } from "react-router";
 import { toast } from "react-toastify";
 
 function AddNewTeam({ teams, setTeams }) {
   const [formData, setFormData] = useState({
-    id: crypto.randomUUID(),
-    name: "",
+    teamName: "",
     noOfPRs: "",
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const existingTeam = teams.find((team) => team.name === formData.name);
-    if (existingTeam) {
-      toast.error("Same Team already exists. Please choose different name.");
-      return;
+
+    try {
+      const response = await fetch("http://localhost:3000/team", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ...formData }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to save team");
+      }
+
+      // const newTeam = await response.json();
+      // setTeams((prevTeams) => [...prevTeams, newTeam]);
+      setFormData({
+        teamName: "",
+        noOfPRs: "",
+      });
+      toast.success("Team added successfully");
+    } catch (error) {
+      toast.error(error.message);
     }
-    console.log(formData);
-    setTeams((prevTeams) => [...prevTeams, formData]);
-    setFormData({
-      id: crypto.randomUUID(),
-      name: "",
-      noOfPRs: "",
-    });
   };
 
   const handleClear = () => {
     setFormData({
-      id: crypto.randomUUID(),
-      name: "",
+      teamName: "",
       noOfPRs: "",
     });
   };
@@ -51,17 +60,17 @@ function AddNewTeam({ teams, setTeams }) {
         <form className="px-6 py-2" onSubmit={handleSubmit}>
           <div className="mb-5">
             <label
-              htmlFor="name"
+              htmlFor="teamName"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white text-left"
             >
               Team Name
             </label>
             <input
               type="text"
-              id="name"
-              value={formData.name}
+              id="teamName"
+              value={formData.teamName}
               onChange={(e) =>
-                setFormData({ ...formData, name: e.target.value })
+                setFormData({ ...formData, teamName: e.target.value })
               }
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="Enter team name"
