@@ -13,21 +13,55 @@ function AddNewSprint({ sprints, setSprints }) {
     endDate: new Date(),
   });
 
-  const handleSubmit = (e) => {
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   const existingTeam = sprints.find((team) => team.name === formData.name);
+  //   if (existingTeam) {
+  //     toast.error("Same Team already exists. Please choose different name.");
+  //     return;
+  //   }
+  //   console.log(formData);
+  //   setSprints((prevTeams) => [...prevTeams, formData]);
+
+  //   setFormData({
+  //     id: crypto.randomUUID(),
+  //     name: "",
+  //     startDate: formData.startDate.toDateString(),
+  //     endDate: formData.endDate.toDateString(),
+  //   });
+  // };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const existingTeam = sprints.find((team) => team.name === formData.name);
-    if (existingTeam) {
-      toast.error("Same Team already exists. Please choose different name.");
-      return;
+
+    try {
+      const response = await fetch(
+        `http://localhost:3000/addSprintName/${formData.name}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to save team");
+      }
+
+      // const newTeam = await response.json();
+      // setTeams((prevTeams) => [...prevTeams, newTeam]);
+      setFormData({
+        id: crypto.randomUUID(),
+        name: "",
+        startDate: formData.startDate.toDateString(),
+        endDate: formData.endDate.toDateString(),
+      });
+      toast.success("Team added successfully");
+    } catch (error) {
+      toast.error(error.message);
     }
-    console.log(formData);
-    setSprints((prevTeams) => [...prevTeams, formData]);
-    setFormData({
-      id: crypto.randomUUID(),
-      name: "",
-      startDate: formData.startDate.toDateString(),
-      endDate: formData.endDate.toDateString(),
-    });
   };
 
   const handleClear = () => {
@@ -40,8 +74,8 @@ function AddNewSprint({ sprints, setSprints }) {
   };
 
   return (
-    <div className="flex justify-center items-center bg-gray-100">
-      <div className="max-w-full w-full h-full my-auto mx-5 bg-gray-100 rounded-lg shadow-md overflow-hidden flex flex-col justify-center">
+    <div className="flex items-center justify-center bg-gray-100">
+      <div className="flex flex-col justify-center w-full h-full max-w-full mx-5 my-auto overflow-hidden bg-gray-100 rounded-lg shadow-md">
         <div className="px-4 py-1">
           <h2 className="text-lg font-bold text-gray-800">Add New Sprint</h2>
         </div>
@@ -49,7 +83,7 @@ function AddNewSprint({ sprints, setSprints }) {
           <div className="mb-5">
             <label
               htmlFor="name"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white text-left"
+              className="block mb-2 text-sm font-medium text-left text-gray-900 dark:text-white"
             >
               Sprint Name
             </label>
@@ -68,7 +102,7 @@ function AddNewSprint({ sprints, setSprints }) {
           <div className="mb-5">
             <label
               htmlFor="startDate"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white text-left"
+              className="block mb-2 text-sm font-medium text-left text-gray-900 dark:text-white"
             >
               Start Date
             </label>
@@ -82,7 +116,7 @@ function AddNewSprint({ sprints, setSprints }) {
           <div className="mb-2">
             <label
               htmlFor="endDate"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white text-left"
+              className="block mb-2 text-sm font-medium text-left text-gray-900 dark:text-white"
             >
               End Date
             </label>

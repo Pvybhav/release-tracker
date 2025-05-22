@@ -8,6 +8,7 @@ import UseAnimations from "react-useanimations";
 import arrowDown from "react-useanimations/lib/arrowDown";
 import arrowUp from "react-useanimations/lib/arrowUp";
 import TeamData from "../data/TeamData";
+import moment from "moment";
 
 const additionalStepNames = ["PR-IP", "FR", "QG"];
 const additionalStepDetails = [
@@ -18,6 +19,7 @@ const additionalStepDetails = [
 function ListView() {
   const resizeRef = useRef(false);
   const chartRef = useRef();
+  const [sprintDetails, setSprintDetails] = useState({});
   const [currentSprint, setCurrentSprint] = useState(2);
   const [selectedCard, setSelectedCard] = useState(null);
   const [chartOptions, setChartOptions] = useState({
@@ -33,6 +35,17 @@ function ListView() {
     colors: ["#008000", "#FFA500", "#808080"],
   });
   const [chartSeries, setChartSeries] = useState([]);
+
+  useEffect(() => {
+    fetch(`http://localhost:3000/getSprintDetails`)
+      .then((response) => response.json())
+      .then((data) => {
+        setSprintDetails(data);
+      })
+      .catch((err) => console.error(err));
+  }, []);
+
+  console.log({ sprintDetails });
 
   useEffect(() => {
     if (selectedCard) {
@@ -143,24 +156,26 @@ function ListView() {
 
   return (
     <div className="flex flex-col w-full" style={{ height: "85vh" }}>
-      <header className="flex justify-between py-4 items-center">
+      <header className="flex items-center justify-between py-4">
         <div>
-          <span className="font-bold text-lg">Sprint Name</span>&nbsp;-&nbsp;
-          <span>Sprint - {currentSprint}</span>
+          <span className="text-lg font-bold">Sprint Name</span>&nbsp;-&nbsp;
+          <span>{sprintDetails.sprintName}</span>
         </div>
         <div className="flex flex-col gap-1">
           <div>
-            <span className="font-bold text-lg">Start date</span> - 10/05/2025
+            <span className="text-lg font-bold">Start date</span> -{" "}
+            {moment(sprintDetails.startDate).format("MMMM Do YYYY")}
           </div>
           <div>
-            <span className="font-bold text-lg">End date </span>- 20/05/2025
+            <span className="text-lg font-bold">End date </span>-{" "}
+            {moment(sprintDetails.endDate).format("MMMM Do YYYY")}
           </div>
         </div>
       </header>
-      {/* <div className="text-right flex justify-end">
+      {/* <div className="flex justify-end text-right">
         <NavLink
           to="/manage-team"
-          className="text-blue-600 hover:text-blue-800 hover:underline flex items-center"
+          className="flex items-center text-blue-600 hover:text-blue-800 hover:underline"
         >
           <CogIcon className="w-6 h-6" />
           <span>Manage Team</span>
@@ -182,15 +197,16 @@ function ListView() {
                       key={card.teamName}
                       onClick={() => handleCardClick(card)}
                     >
-                      <div className=" w-full text-left">
-                        <div className="font-bold text-gray-600 text-xl uppercase">
+                      <div className="w-full text-left ">
+                        <div className="text-xl font-bold text-gray-600 uppercase">
                           {card.teamName}
                         </div>
-                        <div className="justify-center font-bold text-gray-600 text-sm uppercase">
+                        <div className="justify-center text-sm font-bold text-gray-600 uppercase">
                           {handleStage(card)}
                         </div>
                         <div className="flex justify-end">
-                          {card.currentStep > currentSprint && (
+                          {card.currentStep >
+                            Number(sprintDetails.sprintName) && (
                             <UseAnimations
                               animation={arrowUp}
                               size={36}
@@ -198,7 +214,8 @@ function ListView() {
                               autoplay={false}
                             />
                           )}
-                          {card.currentStep < currentSprint && (
+                          {card.currentStep <
+                            Number(sprintDetails.sprintName) && (
                             <UseAnimations
                               animation={arrowDown}
                               size={36}
@@ -216,14 +233,14 @@ function ListView() {
         </div>
         {selectedCard?.teamName && (
           <div className="w-1/2 h-full p-2" style={{ height: "80vh" }}>
-            <div className="bg-white p-4 rounded-lg shadow-lg border border-gray-200 h-full">
+            <div className="h-full p-4 bg-white border border-gray-200 rounded-lg shadow-lg">
               <h2 className="text-xl font-bold">{selectedCard.teamName}</h2>
               <h3 className="text-lg">
-                <span className="font-semibold text-xl">
+                <span className="text-xl font-semibold">
                   {selectedCard.currentStep - 1}
                 </span>
                 &nbsp;out of&nbsp;
-                <span className="font-semibold text-xl">
+                <span className="text-xl font-semibold">
                   {selectedCard.noOfPRs + additionalStages}
                 </span>
                 &nbsp;steps completed

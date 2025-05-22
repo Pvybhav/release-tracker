@@ -5,6 +5,7 @@ const { readFileSync, writeFileSync } = require("fs");
 const app = express();
 const teamsJSON = "./teams.json";
 const sprintsJSON = "./sprints.json";
+const singleSprintsJSON = "./singleSprintsJSON.json";
 
 app.use(express.json());
 app.use(cors({ origin: "*" }));
@@ -59,11 +60,9 @@ app.post("/team", (req, res) => {
   const newTeam = req.body;
   const existingTeam = teams.find((team) => team.teamName === newTeam.teamName);
   if (existingTeam) {
-    res
-      .status(400)
-      .send({
-        error: "Team name already exists. Please choose a different name.",
-      });
+    res.status(400).send({
+      error: "Team name already exists. Please choose a different name.",
+    });
     return;
   }
   teams.push({
@@ -189,6 +188,37 @@ app.delete("/sprint/:id", (req, res) => {
   } catch (err) {
     res.status(500).send({ error: "Failed to write to file" });
   }
+});
+
+ensureFileExists(singleSprintsJSON, {});
+
+app.put("/addSprintName/:sprintName", (req, res) => {
+  const singleSprintJSON = safeJSONParse(singleSprintsJSON);
+  if (singleSprintJSON === null) {
+    res.status(500).send({ error: "Internal server error" });
+    return;
+  }
+  const sprintName = req.params.sprintName;
+
+  const updatedSprint = { ...req.body, sprintName };
+
+  console.log(updatedSprint);
+  try {
+    writeFileSync(singleSprintsJSON, JSON.stringify(updatedSprint));
+    res.send(updatedSprint);
+  } catch (err) {
+    res.status(500).send({ error: "Failed to write to file" });
+  }
+});
+
+app.get("/getSprintDetails", (req, res) => {
+  const singleSprintJSON = safeJSONParse(singleSprintsJSON);
+  if (singleSprintJSON === null) {
+    res.status(500).send({ error: "Internal server error" });
+    return;
+  }
+
+  res.send(singleSprintJSON);
 });
 
 app.listen(3000, () => {
