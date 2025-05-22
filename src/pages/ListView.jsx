@@ -22,6 +22,7 @@ function ListView() {
   const [sprintDetails, setSprintDetails] = useState({});
   const [currentSprint, setCurrentSprint] = useState(2);
   const [selectedCard, setSelectedCard] = useState(null);
+  const [teamCards, setTeamCards] = useState([]);
   const [chartOptions, setChartOptions] = useState({
     dataLabels: {
       enabled: false,
@@ -41,6 +42,15 @@ function ListView() {
       .then((response) => response.json())
       .then((data) => {
         setSprintDetails(data);
+      })
+      .catch((err) => console.error(err));
+  }, []);
+
+  useEffect(() => {
+    fetch(`http://localhost:3000/team`)
+      .then((response) => response.json())
+      .then((data) => {
+        setTeamCards(data);
       })
       .catch((err) => console.error(err));
   }, []);
@@ -125,7 +135,7 @@ function ListView() {
   }, [chartSeries]);
 
   const additionalStages = 3;
-  const teamCards = TeamData;
+  // const teamCards = TeamData;
 
   const handleCardClick = (card) => {
     setSelectedCard(card);

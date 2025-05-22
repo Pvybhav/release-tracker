@@ -190,8 +190,6 @@ app.delete("/sprint/:id", (req, res) => {
   }
 });
 
-ensureFileExists(singleSprintsJSON, {});
-
 app.put("/addSprintName/:sprintName", (req, res) => {
   const singleSprintJSON = safeJSONParse(singleSprintsJSON);
   if (singleSprintJSON === null) {
@@ -212,6 +210,8 @@ app.put("/addSprintName/:sprintName", (req, res) => {
 });
 
 app.get("/getSprintDetails", (req, res) => {
+  ensureFileExists(singleSprintsJSON, {});
+
   const singleSprintJSON = safeJSONParse(singleSprintsJSON);
   if (singleSprintJSON === null) {
     res.status(500).send({ error: "Internal server error" });
