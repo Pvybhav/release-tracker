@@ -1,0 +1,79 @@
+[
+  {
+    "teamName": "Diagnosis",
+    "currentStep": 3,
+    "noOfPRs": 5,
+    "startedOn": "10/05/2025",
+    "dueOn": "15/05/2025"
+  },
+  {
+    "teamName": "Medication",
+    "currentStep": 2,
+    "noOfPRs": 3,
+    "startedOn": "12/05/2025",
+    "dueOn": "17/05/2025"
+  },
+  {
+    "teamName": "Nursing",
+    "currentStep": 5,
+    "noOfPRs": 2,
+    "startedOn": "15/05/2025",
+    "dueOn": "20/05/2025"
+  },
+  {
+    "teamName": "Lab",
+    "currentStep": 4,
+    "noOfPRs": 4,
+    "startedOn": "18/05/2025",
+    "dueOn": "23/05/2025"
+  },
+  {
+    "teamName": "Radiology",
+    "currentStep": 1,
+    "noOfPRs": 3,
+    "startedOn": "20/05/2025",
+    "dueOn": "25/05/2025"
+  },
+  {
+    "teamName": "Surgery",
+    "currentStep": 3,
+    "noOfPRs": 4,
+    "startedOn": "22/05/2025",
+    "dueOn": "27/05/2025"
+  },
+  {
+    "teamName": "Rehabilitation",
+    "currentStep": 5,
+    "noOfPRs": 3,
+    "startedOn": "25/05/2025",
+    "dueOn": "30/05/2025"
+  },
+  {
+    "teamName": "Therapy",
+    "currentStep": 2,
+    "noOfPRs": 2,
+    "startedOn": "28/05/2025",
+    "dueOn": "02/06/2025"
+  },
+  {
+    "teamName": "Dietary",
+    "currentStep": 4,
+    "noOfPRs": 4,
+    "startedOn": "30/05/2025",
+    "dueOn": "04/06/2025"
+  },
+  {
+    "teamName": "Pharmacy",
+    "currentStep": 1,
+    "noOfPRs": 4,
+    "startedOn": "01/06/2025",
+    "dueOn": "06/06/2025"
+  },
+  {
+    "teamName": "Security",
+    "currentStep": 4,
+    "noOfPRs": 2,
+    "startedOn": "05/05/2025",
+    "dueOn": "10/05/2025"
+  }
+]
