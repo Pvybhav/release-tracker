@@ -3,10 +3,11 @@ import { TrashIcon } from "../icons/TrashIcon";
 import { PencilSquareIcon } from "../icons/PencilSquareIcon";
 import { Save } from "../icons/Save";
 
-function TeamList({ setTeams }) {
-  const [teams, setLocalTeams] = useState([]);
+function TeamList() {
+  const [teams, setTeams] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [teamToDelete, setTeamToDelete] = useState(null);
+  const [editingTeamId, setEditingTeamId] = useState(null);
 
   const inputRef = useRef({});
 
@@ -15,21 +16,16 @@ function TeamList({ setTeams }) {
       try {
         const response = await fetch("http://localhost:3000/team");
         const data = await response.json();
-        setLocalTeams(data);
         setTeams(data);
       } catch (error) {
         console.error("Failed to fetch teams:", error);
       }
     };
     fetchTeams();
-  }, [setTeams]);
+  }, []);
 
   const startEditing = (id) => {
-    setLocalTeams((prevTeams) =>
-      prevTeams.map((team) =>
-        team.id === id ? { ...team, editing: true } : team
-      )
-    );
+    setEditingTeamId(id);
   };
 
   const stopEditing = async (id) => {
@@ -50,18 +46,19 @@ function TeamList({ setTeams }) {
       }
 
       const updatedTeam = await response.json();
-      setLocalTeams((prevTeams) =>
+      setTeams((prevTeams) =>
         prevTeams.map((team) =>
-          team.id === id ? { ...team, ...updatedTeam, editing: false } : team
+          team.id === id ? { ...team, ...updatedTeam } : team
         )
       );
+      setEditingTeamId(null);
     } catch (error) {
       console.error("Failed to update team:", error);
     }
   };
 
   const updateTeam = (id, updatedTeam) => {
-    setLocalTeams((prevTeams) =>
+    setTeams((prevTeams) =>
       prevTeams.map((team) =>
         team.id === id ? { ...team, ...updatedTeam } : team
       )
@@ -81,7 +78,7 @@ function TeamList({ setTeams }) {
         throw new Error("Failed to delete team");
       }
 
-      setLocalTeams((prevTeams) =>
+      setTeams((prevTeams) =>
         prevTeams.filter((team) => team.id !== teamToDelete)
       );
       setIsOpen(false);
@@ -97,9 +94,9 @@ function TeamList({ setTeams }) {
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === "Enter") {
-        const editingTeam = teams.find((team) => team.editing);
+        const editingTeam = teams.find((team) => team.id === editingTeamId);
         if (editingTeam) {
-          stopEditing(editingTeam.id);
+          stopEditing(editingTeamId);
         }
       }
     };
@@ -109,7 +106,7 @@ function TeamList({ setTeams }) {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [teams, stopEditing]);
+  }, [teams, editingTeamId, stopEditing]);
 
   return (
     <div className="flex flex-col items-center p-4">
@@ -134,7 +131,7 @@ function TeamList({ setTeams }) {
               >
                 <div className="grid grid-cols-5 items-center">
                   <div className="flex-1 transition-all duration-300 ease-in-out">
-                    {team.editing ? (
+                    {editingTeamId === team.id ? (
                       <input
                         type="text"
                         value={team.teamName}
@@ -153,7 +150,7 @@ function TeamList({ setTeams }) {
                     )}
                   </div>
                   <div className="flex items-center justify-center">
-                    {team.editing ? (
+                    {editingTeamId === team.id ? (
                       <input
                         type="number"
                         value={team.noOfPRs}
@@ -169,7 +166,7 @@ function TeamList({ setTeams }) {
                     )}
                   </div>
                   <div className="flex items-center justify-center">
-                    {team.editing ? (
+                    {editingTeamId === team.id ? (
                       <input
                         type="number"
                         value={team.currentStep}
@@ -187,15 +184,17 @@ function TeamList({ setTeams }) {
                   <div className="flex items-center gap-2 justify-center">
                     <button
                       className={`${
-                        team.editing ? "bg-green-500" : "bg-blue-500"
+                        editingTeamId === team.id
+                          ? "bg-green-500"
+                          : "bg-blue-500"
                       } hover:bg-green-700 text-white px-2 py-1 rounded transition-all duration-300 ease-in-out`}
                       onClick={() =>
-                        team.editing
+                        editingTeamId === team.id
                           ? stopEditing(team.id)
                           : startEditing(team.id)
                       }
                     >
-                      {team.editing ? (
+                      {editingTeamId === team.id ? (
                         <span className="flex items-center gap-1">
                           <Save className="w-5 h-5" />
                           Update
@@ -207,7 +206,7 @@ function TeamList({ setTeams }) {
                         </span>
                       )}
                     </button>
-                    {!team.editing && (
+                    {editingTeamId !== team.id && (
                       <button
                         className="bg-red-500 hover:bg-red-700 text-white px-2 py-1 rounded transition-all duration-300 ease-in-out ml-2"
                         onClick={() => {
