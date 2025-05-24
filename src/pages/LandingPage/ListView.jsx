@@ -74,7 +74,7 @@ function ListView({
         <div className={`flex flex-col w-full mx-4`}>
           {teamCards.map(
             (card, index) =>
-              index % 2 === 0 && (
+              index % (selectedCard?.teamName ? 2 : 3) === 0 && (
                 <div
                   className="grid grid-cols-2 gap-4"
                   key={index}
