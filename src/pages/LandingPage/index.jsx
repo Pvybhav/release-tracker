@@ -28,13 +28,21 @@ function LandingPage() {
             selectedCard?.teamName ? "w-1/2" : "w-full"
           }`}
         >
-          <ListView
-            sprintDetails={sprintDetails}
-            additionalStages={ADDITIONAL_STAGES}
-            selectedCard={selectedCard}
-            setSelectedCard={setSelectedCard}
-            additionalStepNames={ADDITIONAL_STEP_NAMES}
-          />
+          {sprintDetails.teams?.length ? (
+            <ListView
+              sprintDetails={sprintDetails}
+              additionalStages={ADDITIONAL_STAGES}
+              selectedCard={selectedCard}
+              setSelectedCard={setSelectedCard}
+              additionalStepNames={ADDITIONAL_STEP_NAMES}
+            />
+          ) : (
+            <div className="text-3xl font-bold text-center">
+              {Object.keys(sprintDetails).length
+                ? "No teams found"
+                : "No sprint details found"}
+            </div>
+          )}
         </div>
         {selectedCard?.teamName && (
           <div

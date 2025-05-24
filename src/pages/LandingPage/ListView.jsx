@@ -58,8 +58,9 @@ function ListView({
     ? "repeat(2, minmax(0, 1fr)"
     : "repeat(3, minmax(0, 1fr)";
 
+  if (teamCards?.length === 0) return null;
   return (
-    <div className="flex flex-col w-full h-[80vh] overflow-y-scroll">
+    <div className="flex flex-col w-full h-[75vh]">
       {/* <div className="flex justify-end text-right">
         <NavLink
           to="/manage-team"

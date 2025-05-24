@@ -68,7 +68,10 @@ function AddNewSprint() {
       //   startDate: formData.startDate,
       //   endDate: formData.endDate,
       // });
-      toast.success("Sprint details updated successfully");
+      toast.success(
+        `Sprint details ${isEditing ? "updated" : "added"} successfully`
+      );
+      setIsEditing(true);
     } catch (error) {
       toast.error(error.message);
     }
@@ -87,7 +90,7 @@ function AddNewSprint() {
       <div className="flex flex-col justify-center w-full h-full max-w-full mx-5 my-auto overflow-hidden bg-gray-100 rounded-lg shadow-md">
         <div className="px-4 py-1">
           <h2 className="text-lg font-bold text-gray-800">
-            Add / Edit Sprint Details
+            {isEditing ? "Edit Sprint Details" : "Add Sprint Details"}
           </h2>
         </div>
         <hr className="w-full my-2 border-t-2 border-gray-400 border-dashed" />
