@@ -63,7 +63,7 @@ function TeamAndSprintManager(props) {
           <AddNewSprint sprints={sprints} setSprints={setSprints} />
         </div>
       </div>
-      <div className="col-span-8 bg-gray-100">
+      <div className="col-span-8 mt-4 bg-gray-100 rounded-lg">
         <TeamList
           teams={teams}
           setTeams={setTeams}

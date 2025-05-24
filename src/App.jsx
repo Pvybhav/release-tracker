@@ -1,21 +1,17 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
-import { NavLink, Outlet } from "react-router";
-import Navbar from "./pages/Navbar";
-import ListView from "./pages/ListView";
+import { Outlet } from "react-router";
+import LandingPage from "./pages/LandingPage";
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
     <div>
-      <header className="bg-blue-500 text-white py-2">
-        <h1 className="text-xl font-bold text-center">Release Tracker</h1>
+      <header className="py-2 mt-2 text-white bg-blue-500 rounded-xl">
+        <h1 className="text-xl font-bold text-center rounded-lg">
+          Release Tracker
+        </h1>
       </header>
       <main className="mx-16">
-        <ListView />
+        <LandingPage />
         <Outlet />
       </main>
     </div>

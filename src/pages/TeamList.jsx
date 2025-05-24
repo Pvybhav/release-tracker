@@ -108,27 +108,29 @@ function TeamList({ teams, setTeams }) {
   }, [teams, editingTeamId, stopEditing]);
 
   return (
-    <div className="flex flex-col items-center p-4">
-      <h1 className="mb-4 text-3xl font-bold">Teams</h1>
+    <div className="flex flex-col items-center p-2">
+      <h1 className="text-2xl font-bold">Teams</h1>
+      <hr className="w-full my-2 border-t-2 border-gray-400 border-dashed" />
+
       {teams.length === 0 ? (
         <p className="text-lg text-gray-500">No teams available.</p>
       ) : (
         <div className="w-full">
-          <div className="grid items-center grid-cols-5 py-2 border-b border-gray-200">
+          <div className="grid items-center grid-cols-4 py-2 border-b border-gray-200">
             <div className="pl-6 font-bold text-left">Team Name</div>
             <div className="font-bold">Number of Pre Releases</div>
             <div className="font-bold">Current Step</div>
             <div className="font-bold">Actions</div>
           </div>
-          <ul className="w-full">
+          <ul className="w-full max-h-[70vh] overflow-y-scroll">
             {teams.map((team, index) => (
               <li
                 key={team.id}
-                className={`border-b border-gray-200 py-4 ${
+                className={`border-b border-gray-300 py-4 ${
                   index === teams.length - 1 ? "border-b-0" : ""
                 }`}
               >
-                <div className="grid items-center grid-cols-5">
+                <div className="grid items-center grid-cols-4">
                   <div className="flex-1 transition-all duration-300 ease-in-out">
                     {editingTeamId === team.id ? (
                       <input
