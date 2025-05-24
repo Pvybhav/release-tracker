@@ -201,25 +201,31 @@ function ListView() {
           {teamCards.map(
             (card, index) =>
               index % 3 === 0 && (
-                <div className="flex flex-row" key={index}>
+                <div
+                  className="grid grid-cols-3 gap-4"
+                  key={index}
+                  style={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr)" }}
+                >
                   {teamCards.slice(index, index + 3).map((card) => (
                     <div
-                      className={`card cursor-pointer shadow-md hover:shadow-lg transition duration-300 ease-in-out border border-gray-200 rounded-lg p-2 m-2 mx-6 w-1/3 ${
+                      className={`card cursor-pointer shadow-md hover:shadow-lg transition duration-300 ease-in-out border border-gray-200 rounded-lg p-2 m-2 w-full ${
                         selectedCard?.teamName === card.teamName
-                          ? "bg-blue-200 border-blue-800 shadow-xl hover:bg-blue-300"
-                          : "bg-white hover:bg-gray-200"
+                          ? "bg-blue-50 border-blue-800 shadow-xl hover:bg-blue-100"
+                          : "bg-gray-50 hover:bg-gray-100"
                       }`}
                       key={card.teamName}
                       onClick={() => handleCardClick(card)}
                     >
-                      <div className="w-full text-left ">
-                        <div className="text-xl font-bold text-gray-600 uppercase">
-                          {card.teamName}
+                      <div className="flex items-center justify-between">
+                        <div className="text-left">
+                          <div className="text-xl font-bold text-gray-600 uppercase">
+                            {card.teamName}
+                          </div>
+                          <div className="text-sm font-bold text-gray-600 uppercase">
+                            {handleStage(card)}
+                          </div>
                         </div>
-                        <div className="justify-center text-sm font-bold text-gray-600 uppercase">
-                          {handleStage(card)}
-                        </div>
-                        <div className="flex justify-end">
+                        <div className="flex items-center">
                           {card.currentStep >
                             Number(sprintDetails.sprintName) && (
                             <UseAnimations
