@@ -58,7 +58,14 @@ function ListView({
     ? "repeat(2, minmax(0, 1fr)"
     : "repeat(3, minmax(0, 1fr)";
 
-  if (teamCards?.length === 0) return null;
+  if (teamCards?.length === 0)
+    return (
+      <div className="flex flex-col items-center justify-center h-full">
+        <div className="w-full p-8 bg-white rounded-lg shadow-lg py-28">
+          <p className="text-3xl font-bold text-center">No teams found</p>
+        </div>
+      </div>
+    );
   return (
     <div className="flex flex-col w-full h-[75vh]">
       {/* <div className="flex justify-end text-right">
