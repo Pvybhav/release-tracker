@@ -173,12 +173,16 @@ function ListView() {
         </div>
         <div className="flex flex-col gap-1">
           <div>
-            <span className="text-lg font-bold">Start date</span> -{" "}
-            {moment(sprintDetails.startDate).format("MMMM Do YYYY")}
+            <span className="text-lg font-bold">Start date : </span>
+            {sprintDetails.startDate
+              ? moment(sprintDetails.startDate).format("MMMM Do YYYY")
+              : "-"}
           </div>
           <div>
-            <span className="text-lg font-bold">End date </span>-{" "}
-            {moment(sprintDetails.endDate).format("MMMM Do YYYY")}
+            <span className="text-lg font-bold">End date : </span>
+            {sprintDetails.endDate
+              ? moment(sprintDetails.endDate).format("MMMM Do YYYY")
+              : "-"}
           </div>
         </div>
       </header>

@@ -1,17 +1,29 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import { NavLink } from "react-router";
 import { toast } from "react-toastify";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-function AddNewSprint({ sprints, setSprints }) {
+function AddNewSprint() {
+  const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
-    id: crypto.randomUUID(),
     name: "",
     startDate: new Date(),
     endDate: new Date(),
   });
+
+  useEffect(() => {
+    fetch(`http://localhost:3000/getSprintDetails`)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data?.name) {
+          setIsEditing(true);
+        }
+        setFormData(data);
+      })
+      .catch((err) => console.error(err));
+  }, []);
 
   // const handleSubmit = (e) => {
   //   e.preventDefault();
@@ -24,7 +36,6 @@ function AddNewSprint({ sprints, setSprints }) {
   //   setSprints((prevTeams) => [...prevTeams, formData]);
 
   //   setFormData({
-  //     id: crypto.randomUUID(),
   //     name: "",
   //     startDate: formData.startDate.toDateString(),
   //     endDate: formData.endDate.toDateString(),
@@ -47,31 +58,29 @@ function AddNewSprint({ sprints, setSprints }) {
       );
 
       if (!response.ok) {
-        throw new Error("Failed to save team");
+        throw new Error("Failed to save sprint details");
       }
 
       // const newTeam = await response.json();
       // setTeams((prevTeams) => [...prevTeams, newTeam]);
-      setFormData({
-        id: crypto.randomUUID(),
-        name: "",
-        startDate: formData.startDate.toDateString(),
-        endDate: formData.endDate.toDateString(),
-      });
-      toast.success("Team added successfully");
+      // setFormData({
+      //   name: "",
+      //   startDate: formData.startDate,
+      //   endDate: formData.endDate,
+      // });
+      toast.success("Sprint details updated successfully");
     } catch (error) {
       toast.error(error.message);
     }
   };
 
-  const handleClear = () => {
-    setFormData({
-      id: crypto.randomUUID(),
-      name: "",
-      startDate: new Date(),
-      endDate: new Date(),
-    });
-  };
+  // const handleClear = () => {
+  //   setFormData({
+  //     name: "",
+  //     startDate: new Date(),
+  //     endDate: new Date(),
+  //   });
+  // };
 
   return (
     <div className="flex items-center justify-center bg-gray-100">
@@ -132,15 +141,15 @@ function AddNewSprint({ sprints, setSprints }) {
               type="submit"
               className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             >
-              Add Sprint
+              {isEditing ? "Update Sprint" : "Add Sprint"}
             </button>
-            <button
+            {/* <button
               type="button"
               onClick={handleClear}
               className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
             >
               Clear
-            </button>
+            </button> */}
           </div>
         </form>
       </div>

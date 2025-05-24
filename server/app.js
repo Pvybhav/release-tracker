@@ -3,9 +3,9 @@ const cors = require("cors");
 const fs = require("fs");
 const { readFileSync, writeFileSync } = require("fs");
 const app = express();
-const teamsJSON = "./teams.json";
-const sprintsJSON = "./sprints.json";
-const singleSprintsJSON = "./singleSprintsJSON.json";
+const teamsJSONPath = "./teams.json";
+const sprintsJSONPath = "./sprints.json";
+const singleSprintJSONPath = "./singleSprint.json";
 
 app.use(express.json());
 app.use(cors({ origin: "*" }));
@@ -20,8 +20,8 @@ const ensureFileExists = (filePath, defaultContent) => {
   }
 };
 
-ensureFileExists(teamsJSON, []);
-ensureFileExists(sprintsJSON, []);
+ensureFileExists(teamsJSONPath, []);
+ensureFileExists(sprintsJSONPath, []);
 
 const safeJSONParse = (filePath) => {
   try {
@@ -33,8 +33,8 @@ const safeJSONParse = (filePath) => {
 };
 
 app.get("/", (req, res) => {
-  const teams = safeJSONParse(teamsJSON);
-  const sprints = safeJSONParse(sprintsJSON);
+  const teams = safeJSONParse(teamsJSONPath);
+  const sprints = safeJSONParse(sprintsJSONPath);
   if (teams === null || sprints === null) {
     res.status(500).send({ error: "Internal server error" });
     return;
@@ -43,7 +43,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/team", (req, res) => {
-  const teams = safeJSONParse(teamsJSON);
+  const teams = safeJSONParse(teamsJSONPath);
   if (teams === null) {
     res.status(500).send({ error: "Internal server error" });
     return;
@@ -52,7 +52,7 @@ app.get("/team", (req, res) => {
 });
 
 app.post("/team", (req, res) => {
-  const teams = safeJSONParse(teamsJSON);
+  const teams = safeJSONParse(teamsJSONPath);
   if (teams === null) {
     res.status(500).send({ error: "Internal server error" });
     return;
@@ -72,7 +72,7 @@ app.post("/team", (req, res) => {
     editing: false,
   });
   try {
-    writeFileSync(teamsJSON, JSON.stringify(teams));
+    writeFileSync(teamsJSONPath, JSON.stringify(teams));
     res.send(newTeam);
   } catch (err) {
     res.status(500).send({ error: "Failed to write to file" });
@@ -80,7 +80,7 @@ app.post("/team", (req, res) => {
 });
 
 app.put("/team/:id", (req, res) => {
-  const teams = safeJSONParse(teamsJSON);
+  const teams = safeJSONParse(teamsJSONPath);
   if (teams === null) {
     res.status(500).send({ error: "Internal server error" });
     return;
@@ -94,7 +94,7 @@ app.put("/team/:id", (req, res) => {
   }
   teams[index] = updatedTeam;
   try {
-    writeFileSync(teamsJSON, JSON.stringify(teams));
+    writeFileSync(teamsJSONPath, JSON.stringify(teams));
     res.send(updatedTeam);
   } catch (err) {
     res.status(500).send({ error: "Failed to write to file" });
@@ -102,7 +102,7 @@ app.put("/team/:id", (req, res) => {
 });
 
 app.delete("/team/:id", (req, res) => {
-  const teams = safeJSONParse(teamsJSON);
+  const teams = safeJSONParse(teamsJSONPath);
   if (teams === null) {
     res.status(500).send({ error: "Internal server error" });
     return;
@@ -115,7 +115,7 @@ app.delete("/team/:id", (req, res) => {
   }
   teams.splice(index, 1);
   try {
-    writeFileSync(teamsJSON, JSON.stringify(teams));
+    writeFileSync(teamsJSONPath, JSON.stringify(teams));
     res.send({ message: "Team deleted" });
   } catch (err) {
     res.status(500).send({ error: "Failed to write to file" });
@@ -123,7 +123,7 @@ app.delete("/team/:id", (req, res) => {
 });
 
 app.get("/sprint", (req, res) => {
-  const sprints = safeJSONParse(sprintsJSON);
+  const sprints = safeJSONParse(sprintsJSONPath);
   if (sprints === null) {
     res.status(500).send({ error: "Internal server error" });
     return;
@@ -132,7 +132,7 @@ app.get("/sprint", (req, res) => {
 });
 
 app.post("/sprint", (req, res) => {
-  const sprints = safeJSONParse(sprintsJSON);
+  const sprints = safeJSONParse(sprintsJSONPath);
   if (sprints === null) {
     res.status(500).send({ error: "Internal server error" });
     return;
@@ -140,7 +140,7 @@ app.post("/sprint", (req, res) => {
   const newSprint = req.body;
   sprints.push(newSprint);
   try {
-    writeFileSync(sprintsJSON, JSON.stringify(sprints));
+    writeFileSync(sprintsJSONPath, JSON.stringify(sprints));
     res.send(newSprint);
   } catch (err) {
     res.status(500).send({ error: "Failed to write to file" });
@@ -148,7 +148,7 @@ app.post("/sprint", (req, res) => {
 });
 
 app.put("/sprint/:id", (req, res) => {
-  const sprints = safeJSONParse(sprintsJSON);
+  const sprints = safeJSONParse(sprintsJSONPath);
   if (sprints === null) {
     res.status(500).send({ error: "Internal server error" });
     return;
@@ -162,7 +162,7 @@ app.put("/sprint/:id", (req, res) => {
   }
   sprints[index] = updatedSprint;
   try {
-    writeFileSync(sprintsJSON, JSON.stringify(sprints));
+    writeFileSync(sprintsJSONPath, JSON.stringify(sprints));
     res.send(updatedSprint);
   } catch (err) {
     res.status(500).send({ error: "Failed to write to file" });
@@ -170,7 +170,7 @@ app.put("/sprint/:id", (req, res) => {
 });
 
 app.delete("/sprint/:id", (req, res) => {
-  const sprints = safeJSONParse(sprintsJSON);
+  const sprints = safeJSONParse(sprintsJSONPath);
   if (sprints === null) {
     res.status(500).send({ error: "Internal server error" });
     return;
@@ -183,7 +183,7 @@ app.delete("/sprint/:id", (req, res) => {
   }
   sprints.splice(index, 1);
   try {
-    writeFileSync(sprintsJSON, JSON.stringify(sprints));
+    writeFileSync(sprintsJSONPath, JSON.stringify(sprints));
     res.send({ message: "Sprint deleted" });
   } catch (err) {
     res.status(500).send({ error: "Failed to write to file" });
@@ -191,18 +191,20 @@ app.delete("/sprint/:id", (req, res) => {
 });
 
 app.put("/addSprintName/:sprintName", (req, res) => {
-  const singleSprintJSON = safeJSONParse(singleSprintsJSON);
+  ensureFileExists(singleSprintJSONPath, {});
+
+  const singleSprintJSON = safeJSONParse(singleSprintJSONPath);
   if (singleSprintJSON === null) {
     res.status(500).send({ error: "Internal server error" });
     return;
   }
   const sprintName = req.params.sprintName;
 
-  const updatedSprint = { ...req.body, sprintName };
+  const updatedSprint = { ...req.body, sprintName, id: crypto.randomUUID() };
 
   console.log(updatedSprint);
   try {
-    writeFileSync(singleSprintsJSON, JSON.stringify(updatedSprint));
+    writeFileSync(singleSprintJSONPath, JSON.stringify(updatedSprint));
     res.send(updatedSprint);
   } catch (err) {
     res.status(500).send({ error: "Failed to write to file" });
@@ -210,9 +212,9 @@ app.put("/addSprintName/:sprintName", (req, res) => {
 });
 
 app.get("/getSprintDetails", (req, res) => {
-  ensureFileExists(singleSprintsJSON, {});
+  ensureFileExists(singleSprintJSONPath, {});
 
-  const singleSprintJSON = safeJSONParse(singleSprintsJSON);
+  const singleSprintJSON = safeJSONParse(singleSprintJSONPath);
   if (singleSprintJSON === null) {
     res.status(500).send({ error: "Internal server error" });
     return;

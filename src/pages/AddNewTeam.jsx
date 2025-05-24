@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 
-function AddNewTeam({ teams, setTeams }) {
+function AddNewTeam({ setRefreshRequired }) {
   const [formData, setFormData] = useState({
     teamName: "",
     noOfPRs: "",
@@ -29,6 +29,7 @@ function AddNewTeam({ teams, setTeams }) {
         teamName: "",
         noOfPRs: "",
       });
+      setRefreshRequired(true);
       toast.success("Team added successfully");
     } catch (error) {
       toast.error(error.message);
@@ -52,8 +53,8 @@ function AddNewTeam({ teams, setTeams }) {
   };
 
   return (
-    <div className="flex justify-center items-center h-fit bg-gray-100">
-      <div className="max-w-full w-full h-fit my-auto mx-5 bg-gray-100 rounded-lg shadow-md overflow-hidden flex flex-col justify-center">
+    <div className="flex items-center justify-center bg-gray-100 h-fit">
+      <div className="flex flex-col justify-center w-full max-w-full mx-5 my-auto overflow-hidden bg-gray-100 rounded-lg shadow-md h-fit">
         <div className="px-4 py-1">
           <h2 className="text-lg font-bold text-gray-800">Add New Team</h2>
         </div>
@@ -61,7 +62,7 @@ function AddNewTeam({ teams, setTeams }) {
           <div className="mb-5">
             <label
               htmlFor="teamName"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white text-left"
+              className="block mb-2 text-sm font-medium text-left text-gray-900 dark:text-white"
             >
               Team Name
             </label>
@@ -80,7 +81,7 @@ function AddNewTeam({ teams, setTeams }) {
           <div className="mb-2">
             <label
               htmlFor="noOfPRs"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white text-left"
+              className="block mb-2 text-sm font-medium text-left text-gray-900 dark:text-white"
             >
               Number of PR's
             </label>

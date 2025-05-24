@@ -3,26 +3,25 @@ import { TrashIcon } from "../icons/TrashIcon";
 import { PencilSquareIcon } from "../icons/PencilSquareIcon";
 import { Save } from "../icons/Save";
 
-function TeamList() {
-  const [teams, setTeams] = useState([]);
+function TeamList({ teams, setTeams }) {
   const [isOpen, setIsOpen] = useState(false);
   const [teamToDelete, setTeamToDelete] = useState(null);
   const [editingTeamId, setEditingTeamId] = useState(null);
 
   const inputRef = useRef({});
 
-  useEffect(() => {
-    const fetchTeams = async () => {
-      try {
-        const response = await fetch("http://localhost:3000/team");
-        const data = await response.json();
-        setTeams(data);
-      } catch (error) {
-        console.error("Failed to fetch teams:", error);
-      }
-    };
-    fetchTeams();
-  }, []);
+  // useEffect(() => {
+  //   const fetchTeams = async () => {
+  //     try {
+  //       const response = await fetch("http://localhost:3000/team");
+  //       const data = await response.json();
+  //       setTeams(data);
+  //     } catch (error) {
+  //       console.error("Failed to fetch teams:", error);
+  //     }
+  //   };
+  //   fetchTeams();
+  // }, []);
 
   const startEditing = (id) => {
     setEditingTeamId(id);
@@ -110,13 +109,13 @@ function TeamList() {
 
   return (
     <div className="flex flex-col items-center p-4">
-      <h1 className="text-3xl font-bold mb-4">Teams</h1>
+      <h1 className="mb-4 text-3xl font-bold">Teams</h1>
       {teams.length === 0 ? (
-        <p className="text-gray-500 text-lg">No teams available.</p>
+        <p className="text-lg text-gray-500">No teams available.</p>
       ) : (
         <div className="w-full">
-          <div className="grid grid-cols-5 items-center border-b border-gray-200 py-2">
-            <div className="font-bold text-left pl-6">Team Name</div>
+          <div className="grid items-center grid-cols-5 py-2 border-b border-gray-200">
+            <div className="pl-6 font-bold text-left">Team Name</div>
             <div className="font-bold">Number of Pre Releases</div>
             <div className="font-bold">Current Step</div>
             <div className="font-bold">Actions</div>
@@ -129,7 +128,7 @@ function TeamList() {
                   index === teams.length - 1 ? "border-b-0" : ""
                 }`}
               >
-                <div className="grid grid-cols-5 items-center">
+                <div className="grid items-center grid-cols-5">
                   <div className="flex-1 transition-all duration-300 ease-in-out">
                     {editingTeamId === team.id ? (
                       <input
@@ -144,7 +143,7 @@ function TeamList() {
                         ref={(el) => (inputRef.current[team.id] = el)}
                       />
                     ) : (
-                      <h2 className="text-lg font-bold text-left pl-6">
+                      <h2 className="pl-6 text-lg font-bold text-left">
                         {team.teamName}
                       </h2>
                     )}
@@ -181,7 +180,7 @@ function TeamList() {
                       <div className="px-2 py-1">{team.currentStep}</div>
                     )}
                   </div>
-                  <div className="flex items-center gap-2 justify-center">
+                  <div className="flex items-center justify-center gap-2">
                     <button
                       className={`${
                         editingTeamId === team.id
@@ -208,7 +207,7 @@ function TeamList() {
                     </button>
                     {editingTeamId !== team.id && (
                       <button
-                        className="bg-red-500 hover:bg-red-700 text-white px-2 py-1 rounded transition-all duration-300 ease-in-out ml-2"
+                        className="px-2 py-1 ml-2 text-white transition-all duration-300 ease-in-out bg-red-500 rounded hover:bg-red-700"
                         onClick={() => {
                           setTeamToDelete(team.id);
                           setIsOpen(true);
@@ -243,7 +242,7 @@ function TeamList() {
                   Are you sure you want to delete this team?
                 </p>
               </div>
-              <div className="mt-4 flex gap-2 justify-center">
+              <div className="flex justify-center gap-2 mt-4">
                 <button
                   type="button"
                   className="inline-flex justify-center px-4 py-2 text-sm font-medium text-red-900 bg-red-100 border border-transparent rounded-md hover:bg-red-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-500"
