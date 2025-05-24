@@ -1,13 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import Chart from "react-apexcharts";
-import { ChevronDoubleUpIcon } from "../icons/ChevronDoubleUpIcon";
-import { ChevronDoubleDownIcon } from "../icons/ChevronDoubleDownIcon";
-import { CogIcon } from "../icons/CogIcon";
-import { NavLink } from "react-router";
+// import { CogIcon } from "../icons/CogIcon";
+// import { NavLink } from "react-router";
 import UseAnimations from "react-useanimations";
 import arrowDown from "react-useanimations/lib/arrowDown";
 import arrowUp from "react-useanimations/lib/arrowUp";
-import TeamData from "../data/TeamData";
+// import TeamData from "../data/TeamData";
 import moment from "moment";
 
 const additionalStepNames = ["PR-IP", "FR", "QG"];
@@ -197,7 +195,9 @@ function ListView() {
         </NavLink>
       </div> */}
       <div className="flex flex-row w-full">
-        <div className="flex flex-col w-1/2">
+        <div
+          className={`flex flex-col ${selectedCard ? "w-1/2" : "w-full"} mx-4`}
+        >
           {teamCards.map(
             (card, index) =>
               index % 3 === 0 && (
