@@ -20,7 +20,7 @@ function ListView() {
   const resizeRef = useRef(false);
   const chartRef = useRef();
   const [sprintDetails, setSprintDetails] = useState({});
-  const [currentSprint, setCurrentSprint] = useState(2);
+  // const [currentSprint, setCurrentSprint] = useState(2);
   const [selectedCard, setSelectedCard] = useState(null);
   const [teamCards, setTeamCards] = useState([]);
   const [chartOptions, setChartOptions] = useState({
@@ -30,6 +30,7 @@ function ListView() {
     series: [],
     labels: [],
     legend: {
+      show: false,
       customLegendItems: [],
       showForSingleSeries: true,
     },
@@ -266,8 +267,22 @@ function ListView() {
                   options={chartOptions}
                   series={chartSeries}
                   type="donut"
-                  height={450}
+                  height={400}
                 />
+                <div className="flex flex-row justify-center mt-4 space-x-4">
+                  <div className="flex flex-row items-center">
+                    <div className="w-4 h-4 bg-green-700 rounded-full"></div>
+                    <span className="ml-2">Completed</span>
+                  </div>
+                  <div className="flex flex-row items-center">
+                    <div className="w-4 h-4 bg-yellow-500 rounded-full"></div>
+                    <span className="ml-2">In Progress</span>
+                  </div>
+                  <div className="flex flex-row items-center">
+                    <div className="w-4 h-4 bg-gray-500 rounded-full"></div>
+                    <span className="ml-2">Pending</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
