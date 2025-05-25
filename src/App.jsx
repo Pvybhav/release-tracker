@@ -1,6 +1,6 @@
 import "./App.css";
 import { NavLink, Outlet } from "react-router";
-import LandingPage from "./pages/LandingPage";
+import SprintView from "./pages/SprintView";
 import { CogIcon } from "./icons/CogIcon";
 
 function App() {
@@ -17,7 +17,7 @@ function App() {
         </NavLink>
       </header>
       <main className="mx-16">
-        <LandingPage />
+        <SprintView />
         <Outlet />
       </main>
     </div>

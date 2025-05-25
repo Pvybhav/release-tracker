@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import ChartView from "./ChartView";
 import Header from "./Header";
 import ListView from "./ListView";
+import Boards from "../Board";
 
 const ADDITIONAL_STAGES = 3;
 const ADDITIONAL_STEP_NAMES = ["PR-IP", "FR", "QG"];
 
-function LandingPage() {
+function SprintView() {
   const [selectedCard, setSelectedCard] = useState(null);
   const [sprintDetails, setSprintDetails] = useState({});
 
@@ -54,4 +55,4 @@ function LandingPage() {
   );
 }
 
-export default LandingPage;
+export default SprintView;

@@ -6,30 +6,23 @@ import { createBrowserRouter, RouterProvider } from "react-router";
 import TeamAndSprintManager from "./pages/TeamAndSprintManager.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import { ToastContainer } from "react-toastify";
+import Boards from "./pages/Board/index.jsx";
+import SprintView from "./pages/SprintView/index.jsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
+    element: <Boards />,
+    errorElement: <NotFound />,
+  },
+  {
+    path: "/board/:boardId",
     element: <App />,
-    // children: [
-    //   {
-    //     path: "/manage-team",
-    //     element: <TeamAndSprintManager />,
-    //     errorElement: <NotFound />,
-    //   },
-    // ],
     errorElement: <NotFound />,
   },
   {
     path: "/manage-team",
     element: <TeamAndSprintManager />,
-    // children: [
-    //   {
-    //     path: "/manage-team",
-    //     element: <AddNewTeam />,
-    //     errorElement: <NotFound />,
-    //   },
-    // ],
     errorElement: <NotFound />,
   },
 ]);
