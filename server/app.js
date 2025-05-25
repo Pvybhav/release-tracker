@@ -6,6 +6,7 @@ const app = express();
 const teamsJSONPath = "./teams.json";
 const sprintsJSONPath = "./sprints.json";
 const singleSprintJSONPath = "./singleSprint.json";
+const boardsJSONPath = "./boards.json";
 
 app.use(express.json());
 app.use(cors({ origin: "*" }));
@@ -190,6 +191,51 @@ app.delete("/sprint/:id", (req, res) => {
   }
 });
 
+app.post("/addBoard", (req, res) => {
+  ensureFileExists(boardsJSONPath, []);
+
+  const boards = safeJSONParse(boardsJSONPath);
+  if (boards === null) {
+    res.status(500).send({ error: "Internal server error" });
+    return;
+  }
+  const newBoard = req.body;
+  const existingBoard = boards.find((board) => board.title === newBoard.title);
+
+  if (existingBoard) {
+    res.status(400).send({
+      error: "Board name already exists. Please choose a different name.",
+    });
+    return;
+  }
+  boards.push({
+    ...(newBoard || {}),
+    id: crypto.randomUUID(),
+  });
+  try {
+    writeFileSync(boardsJSONPath, JSON.stringify(boards));
+    res.send(newBoard);
+  } catch (err) {
+    res.status(500).send({ error: "Failed to write to file" });
+  }
+});
+
+app.get("/boards", (req, res) => {
+  ensureFileExists(boardsJSONPath, {});
+
+  const singleSprintJSON = safeJSONParse(boardsJSONPath);
+  if (singleSprintJSON === null) {
+    res.status(500).send({ error: "Internal server error" });
+    return;
+  }
+
+  res.send(singleSprintJSON);
+});
+
+app.listen(3000, () => {
+  console.log("Server started on port 3000");
+});
+
 app.put("/addSprintName/:sprintName", (req, res) => {
   ensureFileExists(singleSprintJSONPath, {});
 
@@ -202,7 +248,6 @@ app.put("/addSprintName/:sprintName", (req, res) => {
 
   const updatedSprint = { ...req.body, sprintName, id: crypto.randomUUID() };
 
-  console.log(updatedSprint);
   try {
     writeFileSync(singleSprintJSONPath, JSON.stringify(updatedSprint));
     res.send(updatedSprint);

@@ -19,18 +19,20 @@ function AddNewTeam({ setRefreshRequired }) {
         body: JSON.stringify({ ...formData }),
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to save team");
-      }
+      const addedTeam = await response.json();
 
-      // const newTeam = await response.json();
-      // setTeams((prevTeams) => [...prevTeams, newTeam]);
-      setFormData({
-        teamName: "",
-        noOfPRs: "",
-      });
-      setRefreshRequired(true);
-      toast.success("Team added successfully");
+      if (addedTeam.error) {
+        throw new Error(addedTeam.error);
+      } else if (!response.ok) {
+        throw new Error("Failed to add board");
+      } else {
+        setFormData({
+          teamName: "",
+          noOfPRs: "",
+        });
+        setRefreshRequired(true);
+        toast.success("Team added successfully");
+      }
     } catch (error) {
       toast.error(error.message);
     }

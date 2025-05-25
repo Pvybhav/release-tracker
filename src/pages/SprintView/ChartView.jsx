@@ -52,7 +52,6 @@ function ChartView({ selectedCard, additionalStages, additionalStepNames }) {
         ),
         tooltip: {
           custom: function ({ series, seriesIndex, dataPointIndex, w }) {
-            console.log(series, seriesIndex, dataPointIndex, w);
             // return "In progress";
             return `${w.config.labels[seriesIndex]}`;
           },

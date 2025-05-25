@@ -32,7 +32,6 @@ function AddNewSprint() {
   //     toast.error("Same Team already exists. Please choose different name.");
   //     return;
   //   }
-  //   console.log(formData);
   //   setSprints((prevTeams) => [...prevTeams, formData]);
 
   //   setFormData({

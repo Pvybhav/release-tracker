@@ -35,8 +35,6 @@ function ListView({
     return Array.from(
       { length: cardDetails.noOfPRs + additionalStages },
       (_, seriesIndex) => {
-        console.log({ _, seriesIndex });
-
         switch (seriesIndex) {
           case cardDetails.noOfPRs + additionalStages - 1:
             return additionalStepNames.at(-1);

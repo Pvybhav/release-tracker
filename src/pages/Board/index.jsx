@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function Board({ title, description }) {
   return (
     <NavLink
       to={`/board/${title}`}
-      className="flex flex-col p-4 bg-white rounded-lg shadow-lg"
+      className="flex flex-col p-4 bg-white rounded-lg shadow-lg min-w-80 hover:bg-gray-100"
     >
       <div className="flex flex-col items-center justify-between mb-4">
         <h2 className="text-lg font-bold">{title}</h2>
@@ -16,23 +17,20 @@ function Board({ title, description }) {
 }
 
 function Boards() {
-  const [boards, setBoards] = useState([
-    {
-      id: crypto.randomUUID(),
-      title: "Board-1",
-      description: "Board-1 description",
-    },
-    {
-      id: crypto.randomUUID(),
-      title: "Board-2",
-      description: "Board-2 description",
-    },
-    {
-      id: crypto.randomUUID(),
-      title: "Board-3",
-      description: "Board-3 description",
-    },
-  ]);
+  const [boards, setBoards] = useState([]);
+
+  useEffect(() => {
+    const fetchBoards = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/boards");
+        const data = await response.json();
+        setBoards(data);
+      } catch (error) {
+        console.error("Failed to fetch teams:", error);
+      }
+    };
+    fetchBoards();
+  }, []);
 
   const [newBoard, setNewBoard] = useState({ title: "", description: "" });
   const [showAddBoardForm, setShowAddBoardForm] = useState(false);
@@ -48,12 +46,33 @@ function Boards() {
     setNewBoard({ ...newBoard, [e.target.name]: e.target.value });
   };
 
-  const handleAddBoardSubmit = (e) => {
+  const handleAddBoardSubmit = async (e) => {
     e.preventDefault();
-    const newBoardId = crypto.randomUUID();
-    setBoards([...boards, { id: newBoardId, ...newBoard }]);
-    setNewBoard({ title: "", description: "" });
-    setShowAddBoardForm(false);
+    try {
+      const response = await fetch("http://localhost:3000/addBoard", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newBoard),
+      });
+
+      const addedBoard = await response.json();
+
+      if (addedBoard.error) {
+        throw new Error(addedBoard.error);
+      } else if (!response.ok) {
+        throw new Error("Failed to add board");
+      } else {
+        setBoards([...boards, addedBoard]);
+        toast.success("Board added successfully");
+      }
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setNewBoard({ title: "", description: "" });
+      setShowAddBoardForm(false);
+    }
   };
 
   const cancelAddBoard = () => {
