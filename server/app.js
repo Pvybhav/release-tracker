@@ -44,11 +44,18 @@ app.get("/", (req, res) => {
 });
 
 app.get("/team", (req, res) => {
-  const teams = safeJSONParse(teamsJSONPath);
-  if (teams === null) {
+  const boards = safeJSONParse(boardsJSONPath);
+  if (boards === null) {
     res.status(500).send({ error: "Internal server error" });
     return;
   }
+
+  const selectedBoard = boards.find(
+    (board) => board.title === req.query.boardName
+  );
+  console.log({ boards, selectedBoard, params: req.query });
+
+  const teams = selectedBoard?.teams || [];
   res.send(teams);
 });
 

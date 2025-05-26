@@ -1,13 +1,16 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import AddNewTeam from "./AddNewTeam";
 import TeamList from "./TeamList";
 import AddNewSprint from "./AddNewSprint";
+import { BoardContext } from "../main";
 // import SprintList from "./SprintList";
 
 const addIds = (teams) =>
   teams.map((team) => ({ ...team, id: crypto.randomUUID(), editing: false }));
 
 function TeamAndSprintManager(props) {
+  const boardDetails = useContext(BoardContext);
+
   const [refreshRequired, setRefreshRequired] = useState(true);
   const [teams, setTeams] = useState([]);
   const [sprints, setSprints] = useState([
@@ -37,7 +40,12 @@ function TeamAndSprintManager(props) {
   useEffect(() => {
     const fetchTeams = async () => {
       try {
-        const response = await fetch("http://localhost:3000/team");
+        const response = await fetch(
+          `http://localhost:3000/team?boardName=${boardDetails?.boardName}`,
+          {
+            method: "GET",
+          }
+        );
         const data = await response.json();
         setTeams(data);
         setRefreshRequired(false);
