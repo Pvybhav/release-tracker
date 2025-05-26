@@ -116,21 +116,31 @@ app.post("/team", (req, res) => {
 });
 
 app.put("/team/:id", (req, res) => {
-  const teams = safeJSONParse(teamsJSONPath);
-  if (teams === null) {
+  const boards = safeJSONParse(boardsJSONPath);
+  if (boards === null) {
     res.status(500).send({ error: "Internal server error" });
     return;
   }
   const id = req.params.id;
   const updatedTeam = req.body;
-  const index = teams.findIndex((team) => team.id === id);
+  const selectedBoard = boards.find(
+    (board) => board.title === req.query.boardName
+  );
+  if (!selectedBoard) {
+    res.status(404).send({ error: "Board not found" });
+    return;
+  }
+  const index = selectedBoard.teams.findIndex((team) => team.id === id);
   if (index === -1) {
     res.status(404).send({ error: "Team not found" });
     return;
   }
-  teams[index] = updatedTeam;
+  selectedBoard.teams[index] = updatedTeam;
+  const updatedBoards = boards.map((board) =>
+    board.title === selectedBoard.title ? selectedBoard : board
+  );
   try {
-    writeFileSync(teamsJSONPath, JSON.stringify(teams));
+    writeFileSync(boardsJSONPath, JSON.stringify(updatedBoards));
     res.send(updatedTeam);
   } catch (err) {
     res.status(500).send({ error: "Failed to write to file" });
@@ -138,20 +148,30 @@ app.put("/team/:id", (req, res) => {
 });
 
 app.delete("/team/:id", (req, res) => {
-  const teams = safeJSONParse(teamsJSONPath);
-  if (teams === null) {
+  const boards = safeJSONParse(boardsJSONPath);
+  if (boards === null) {
     res.status(500).send({ error: "Internal server error" });
     return;
   }
   const id = req.params.id;
-  const index = teams.findIndex((team) => team.id === id);
+  const selectedBoard = boards.find(
+    (board) => board.title === req.query.boardName
+  );
+  if (!selectedBoard) {
+    res.status(404).send({ error: "Board not found" });
+    return;
+  }
+  const index = selectedBoard.teams.findIndex((team) => team.id === id);
   if (index === -1) {
     res.status(404).send({ error: "Team not found" });
     return;
   }
-  teams.splice(index, 1);
+  selectedBoard.teams.splice(index, 1);
+  const updatedBoards = boards.map((board) =>
+    board.title === selectedBoard.title ? selectedBoard : board
+  );
   try {
-    writeFileSync(teamsJSONPath, JSON.stringify(teams));
+    writeFileSync(boardsJSONPath, JSON.stringify(updatedBoards));
     res.send({ message: "Team deleted" });
   } catch (err) {
     res.status(500).send({ error: "Failed to write to file" });

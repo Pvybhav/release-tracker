@@ -1,9 +1,12 @@
-import { Fragment, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { TrashIcon } from "../icons/TrashIcon";
 import { PencilSquareIcon } from "../icons/PencilSquareIcon";
 import { Save } from "../icons/Save";
+import { BoardContext } from "../main";
 
 function TeamList({ teams, setTeams }) {
+  const boardDetails = useContext(BoardContext);
+
   const [isOpen, setIsOpen] = useState(false);
   const [teamToDelete, setTeamToDelete] = useState(null);
   const [editingTeamId, setEditingTeamId] = useState(null);
@@ -32,13 +35,16 @@ function TeamList({ teams, setTeams }) {
     if (!editingTeam) return;
 
     try {
-      const response = await fetch(`http://localhost:3000/team/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(editingTeam),
-      });
+      const response = await fetch(
+        `http://localhost:3000/team/${id}?boardName=${boardDetails.boardName}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(editingTeam),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to update team");
@@ -67,7 +73,7 @@ function TeamList({ teams, setTeams }) {
   const deleteTeam = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3000/team/${teamToDelete}`,
+        `http://localhost:3000/team/${teamToDelete}?boardName=${boardDetails.boardName}`,
         {
           method: "DELETE",
         }
