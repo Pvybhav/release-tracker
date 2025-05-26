@@ -5,7 +5,7 @@ function Header({ sprintDetails }) {
     <header className="flex items-center justify-between py-1">
       <div>
         <span className="text-lg font-bold">Sprint Name</span>&nbsp;-&nbsp;
-        <span>{sprintDetails.sprintName}</span>
+        <span>{sprintDetails.name}</span>
       </div>
       <div className="flex flex-col gap-1">
         <div>

@@ -107,8 +107,7 @@ function ListView({
                             </div>
                           </div>
                           <div className="flex items-center">
-                            {card.currentStep >
-                              Number(sprintDetails.sprintName) && (
+                            {card.currentStep > Number(sprintDetails.name) && (
                               <UseAnimations
                                 animation={arrowUp}
                                 size={36}
@@ -116,8 +115,7 @@ function ListView({
                                 autoplay={false}
                               />
                             )}
-                            {card.currentStep <
-                              Number(sprintDetails.sprintName) && (
+                            {card.currentStep < Number(sprintDetails.name) && (
                               <UseAnimations
                                 animation={arrowDown}
                                 size={36}

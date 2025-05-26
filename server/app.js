@@ -69,7 +69,6 @@ app.post("/team", (req, res) => {
   const selectedBoard = boards.find(
     (board) => board.title === req.query.boardName
   );
-  console.log({ boards, selectedBoard, params: req.query });
 
   if (!selectedBoard) {
     res.status(404).send({ error: "Board not found" });
@@ -287,24 +286,31 @@ app.get("/boards", (req, res) => {
   res.send(singleSprintJSON);
 });
 
-app.listen(3000, () => {
-  console.log("Server started on port 3000");
-});
+app.put("/addSprintName", (req, res) => {
+  ensureFileExists(boardsJSONPath, {});
 
-app.put("/addSprintName/:sprintName", (req, res) => {
-  ensureFileExists(singleSprintJSONPath, {});
-
-  const singleSprintJSON = safeJSONParse(singleSprintJSONPath);
-  if (singleSprintJSON === null) {
+  const boards = safeJSONParse(boardsJSONPath);
+  if (boards === null) {
     res.status(500).send({ error: "Internal server error" });
     return;
   }
-  const sprintName = req.params.sprintName;
+  const boardName = req.query.boardName;
+  const selectedBoard = boards.find((board) => board.title === boardName);
+  if (!selectedBoard) {
+    res.status(404).send({ error: "Board not found" });
+    return;
+  }
 
-  const updatedSprint = { ...req.body, sprintName, id: crypto.randomUUID() };
+  const updatedSprint = { ...selectedBoard.sprintDetails, ...req.body };
+
+  const updatedBoards = boards.map((board) =>
+    board.title === boardName
+      ? { ...board, sprintDetails: updatedSprint }
+      : board
+  );
 
   try {
-    writeFileSync(singleSprintJSONPath, JSON.stringify(updatedSprint));
+    writeFileSync(boardsJSONPath, JSON.stringify(updatedBoards));
     res.send(updatedSprint);
   } catch (err) {
     res.status(500).send({ error: "Failed to write to file" });
@@ -312,15 +318,23 @@ app.put("/addSprintName/:sprintName", (req, res) => {
 });
 
 app.get("/getSprintDetails", (req, res) => {
-  ensureFileExists(singleSprintJSONPath, {});
+  ensureFileExists(boardsJSONPath, []);
 
-  const singleSprintJSON = safeJSONParse(singleSprintJSONPath);
-  if (singleSprintJSON === null) {
+  const boards = safeJSONParse(boardsJSONPath);
+  if (boards === null) {
     res.status(500).send({ error: "Internal server error" });
     return;
   }
 
-  res.send(singleSprintJSON);
+  const boardName = req.query.boardName;
+  const selectedBoard = boards.find((board) => board.title === boardName);
+
+  if (!selectedBoard) {
+    res.status(404).send({ error: "Board not found" });
+    return;
+  }
+
+  res.send(selectedBoard.sprintDetails || {});
 });
 
 app.listen(3000, () => {

@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Select from "react-select";
 import { NavLink } from "react-router";
 import { toast } from "react-toastify";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { BoardContext } from "../main";
 
 function AddNewSprint() {
+  const boardDetails = useContext(BoardContext);
+
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -14,7 +17,9 @@ function AddNewSprint() {
   });
 
   useEffect(() => {
-    fetch(`http://localhost:3000/getSprintDetails`)
+    fetch(
+      `http://localhost:3000/getSprintDetails?boardName=${boardDetails?.boardName}`
+    )
       .then((response) => response.json())
       .then((data) => {
         if (data?.name) {
@@ -46,7 +51,7 @@ function AddNewSprint() {
 
     try {
       const response = await fetch(
-        `http://localhost:3000/addSprintName/${formData.name}`,
+        `http://localhost:3000/addSprintName?boardName=${boardDetails?.boardName}`,
         {
           method: "PUT",
           headers: {
