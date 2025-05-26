@@ -53,34 +53,62 @@ app.get("/team", (req, res) => {
   const selectedBoard = boards.find(
     (board) => board.title === req.query.boardName
   );
-  console.log({ boards, selectedBoard, params: req.query });
 
   const teams = selectedBoard?.teams || [];
   res.send(teams);
 });
 
 app.post("/team", (req, res) => {
-  const teams = safeJSONParse(teamsJSONPath);
-  if (teams === null) {
+  const boards = safeJSONParse(boardsJSONPath);
+
+  if (boards === null) {
     res.status(500).send({ error: "Internal server error" });
     return;
   }
+
+  const selectedBoard = boards.find(
+    (board) => board.title === req.query.boardName
+  );
+  console.log({ boards, selectedBoard, params: req.query });
+
+  if (!selectedBoard) {
+    res.status(404).send({ error: "Board not found" });
+    return;
+  }
+
   const newTeam = req.body;
-  const existingTeam = teams.find((team) => team.teamName === newTeam.teamName);
-  if (existingTeam) {
+  const isTeamNameExists = selectedBoard?.teams.find(
+    (team) => team.teamName === newTeam.teamName
+  );
+
+  if (isTeamNameExists) {
     res.status(400).send({
       error: "Team name already exists. Please choose a different name.",
     });
     return;
   }
-  teams.push({
-    ...(newTeam || {}),
-    id: crypto.randomUUID(),
-    currentStep: 1,
-    editing: false,
-  });
+
+  const updatedTeams = [
+    ...selectedBoard.teams,
+    {
+      ...newTeam,
+      id: crypto.randomUUID(),
+      currentStep: 1,
+      editing: false,
+    },
+  ];
+
+  const udpatedBoard = {
+    ...selectedBoard,
+    teams: updatedTeams,
+  };
+
+  const updatedBoards = boards.map((board) =>
+    board.title === selectedBoard.title ? udpatedBoard : board
+  );
+
   try {
-    writeFileSync(teamsJSONPath, JSON.stringify(teams));
+    writeFileSync(boardsJSONPath, JSON.stringify(updatedBoards));
     res.send(newTeam);
   } catch (err) {
     res.status(500).send({ error: "Failed to write to file" });

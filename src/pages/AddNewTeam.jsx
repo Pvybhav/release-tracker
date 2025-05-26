@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { toast } from "react-toastify";
+import { BoardContext } from "../main";
 
 function AddNewTeam({ setRefreshRequired }) {
+  const boardDetails = useContext(BoardContext);
+
   const [formData, setFormData] = useState({
     teamName: "",
     noOfPRs: "",
@@ -11,13 +14,16 @@ function AddNewTeam({ setRefreshRequired }) {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:3000/team", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ...formData }),
-      });
+      const response = await fetch(
+        `http://localhost:3000/team?boardName=${boardDetails?.boardName}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ ...formData }),
+        }
+      );
 
       const addedTeam = await response.json();
 
