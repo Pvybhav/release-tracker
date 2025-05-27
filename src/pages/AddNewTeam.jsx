@@ -90,40 +90,42 @@ function AddNewTeam({ setRefreshRequired }) {
               required
             />
           </div>
-          <div className="mb-5">
-            <label
-              htmlFor="currentStep"
-              className="block mb-2 text-sm font-medium text-left text-gray-900 dark:text-white"
-            >
-              Current Step
-            </label>
-            <input
-              type="number"
-              id="currentStep"
-              value={formData.currentStep}
-              onChange={(e) =>
-                setFormData({ ...formData, currentStep: e.target.value })
-              }
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="Enter Current Step"
-              required
-            />
-          </div>
-          <div className="mb-2">
-            <label
-              htmlFor="noOfPRs"
-              className="block mb-2 text-sm font-medium text-left text-gray-900 dark:text-white"
-            >
-              Number of PR's
-            </label>
-            <input
-              type="number"
-              id="noOfPRs"
-              value={formData.noOfPRs}
-              onChange={handleNoOfPRsChange}
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              required
-            />
+          <div className="flex justify-between">
+            <div className="mb-5">
+              <label
+                htmlFor="currentStep"
+                className="block mb-2 text-sm font-medium text-left text-gray-900 dark:text-white"
+              >
+                Current Step
+              </label>
+              <input
+                type="number"
+                id="currentStep"
+                value={formData.currentStep}
+                onChange={(e) =>
+                  setFormData({ ...formData, currentStep: e.target.value })
+                }
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="Enter Current Step"
+                required
+              />
+            </div>
+            <div className="mb-2">
+              <label
+                htmlFor="noOfPRs"
+                className="block mb-2 text-sm font-medium text-left text-gray-900 dark:text-white"
+              >
+                Number of PR's
+              </label>
+              <input
+                type="number"
+                id="noOfPRs"
+                value={formData.noOfPRs}
+                onChange={handleNoOfPRsChange}
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                required
+              />
+            </div>
           </div>
           <div className="flex justify-center gap-4">
             <button

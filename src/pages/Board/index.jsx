@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { toast } from "react-toastify";
+import { HomeIcon } from "../../icons/HomeIcon";
 
 function Board({ title, description }) {
   return (
@@ -96,87 +97,102 @@ function Boards() {
   };
 
   return (
-    <div className="flex flex-col items-center m-4">
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-        {boards.map(({ id, title, description }) => (
-          <Board key={id} title={title} description={description} id={id} />
-        ))}
-      </div>
-      {showAddBoardForm ? (
-        !isAuthenticated ? (
-          <form
-            className="flex flex-col items-center mt-4"
-            onSubmit={handlePasswordSubmit}
-          >
-            <input
-              type="password"
-              value={password}
-              onChange={handlePasswordChange}
-              placeholder="Enter password"
-              className="px-4 py-2 mb-2 border border-gray-300 rounded-lg"
-            />
-            <div className="flex space-x-4">
-              <button
-                type="submit"
-                className="px-4 py-2 text-white bg-blue-500 rounded-lg"
-              >
-                Authenticate
-              </button>
-              <button
-                type="button"
-                className="px-4 py-2 text-white bg-red-500 rounded-lg"
-                onClick={cancelAddBoard}
-              >
-                Cancel
-              </button>
-            </div>
-          </form>
-        ) : (
-          <form
-            className="flex flex-col items-center mt-4"
-            onSubmit={handleAddBoardSubmit}
-          >
-            <input
-              type="text"
-              name="title"
-              value={newBoard.title}
-              onChange={handleNewBoardChange}
-              placeholder="Enter board title"
-              className="px-4 py-2 mb-2 border border-gray-300 rounded-lg"
-            />
-            <input
-              type="text"
-              name="description"
-              value={newBoard.description}
-              onChange={handleNewBoardChange}
-              placeholder="Enter board description"
-              className="px-4 py-2 mb-2 border border-gray-300 rounded-lg"
-            />
-            <div className="flex space-x-4">
-              <button
-                type="submit"
-                className="px-4 py-2 text-white bg-blue-500 rounded-lg"
-              >
-                Add Board
-              </button>
-              <button
-                type="button"
-                className="px-4 py-2 text-white bg-red-500 rounded-lg"
-                onClick={cancelAddBoard}
-              >
-                Cancel
-              </button>
-            </div>
-          </form>
-        )
-      ) : (
-        <button
-          className="px-4 py-2 mt-4 text-white bg-blue-500 rounded-lg"
-          onClick={addBoard}
+    <div>
+      <header className="flex items-center justify-between px-4 py-2 mt-2 text-white bg-blue-500 rounded-xl">
+        <h1 className="mx-auto text-xl font-bold">Release Tracker</h1>
+
+        <div className="w-px h-5 mx-2 bg-white" />
+
+        <NavLink
+          to="/"
+          className="flex items-center justify-end px-2 text-white hover:text-yellow-300 hover:underline"
         >
-          Add Board
-        </button>
-      )}
+          <HomeIcon className="w-5 h-5" />
+          <span>Home</span>
+        </NavLink>
+      </header>
+      <div className="flex flex-col items-center m-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+          {boards.map(({ id, title, description }) => (
+            <Board key={id} title={title} description={description} id={id} />
+          ))}
+        </div>
+        {showAddBoardForm ? (
+          !isAuthenticated ? (
+            <form
+              className="flex flex-col items-center mt-4"
+              onSubmit={handlePasswordSubmit}
+            >
+              <input
+                type="password"
+                value={password}
+                onChange={handlePasswordChange}
+                placeholder="Enter password"
+                className="px-4 py-2 mb-2 border border-gray-300 rounded-lg"
+              />
+              <div className="flex space-x-4">
+                <button
+                  type="submit"
+                  className="px-4 py-2 text-white bg-blue-500 rounded-lg"
+                >
+                  Authenticate
+                </button>
+                <button
+                  type="button"
+                  className="px-4 py-2 text-white bg-red-500 rounded-lg"
+                  onClick={cancelAddBoard}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          ) : (
+            <form
+              className="flex flex-col items-center mt-4"
+              onSubmit={handleAddBoardSubmit}
+            >
+              <input
+                type="text"
+                name="title"
+                value={newBoard.title}
+                onChange={handleNewBoardChange}
+                placeholder="Enter board title"
+                className="px-4 py-2 mb-2 border border-gray-300 rounded-lg"
+              />
+              <input
+                type="text"
+                name="description"
+                value={newBoard.description}
+                onChange={handleNewBoardChange}
+                placeholder="Enter board description"
+                className="px-4 py-2 mb-2 border border-gray-300 rounded-lg"
+              />
+              <div className="flex space-x-4">
+                <button
+                  type="submit"
+                  className="px-4 py-2 text-white bg-blue-500 rounded-lg"
+                >
+                  Add Board
+                </button>
+                <button
+                  type="button"
+                  className="px-4 py-2 text-white bg-red-500 rounded-lg"
+                  onClick={cancelAddBoard}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          )
+        ) : (
+          <button
+            className="px-4 py-2 mt-4 text-white bg-blue-500 rounded-lg"
+            onClick={addBoard}
+          >
+            Add Board
+          </button>
+        )}
+      </div>
     </div>
   );
 }
