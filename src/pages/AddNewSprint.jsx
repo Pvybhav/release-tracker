@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Select from "react-select";
 import { NavLink } from "react-router";
 import { toast } from "react-toastify";
@@ -6,9 +6,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { BoardContext } from "../main";
 
-function AddNewSprint() {
-  const boardDetails = useContext(BoardContext);
-
+function AddNewSprint({ boardName }) {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -17,9 +15,7 @@ function AddNewSprint() {
   });
 
   useEffect(() => {
-    fetch(
-      `http://localhost:3000/getSprintDetails?boardName=${boardDetails?.boardName}`
-    )
+    fetch(`http://localhost:3000/getSprintDetails?boardName=${boardName}`)
       .then((response) => response.json())
       .then((data) => {
         if (data?.name) {
@@ -28,7 +24,7 @@ function AddNewSprint() {
         setFormData(data);
       })
       .catch((err) => console.error(err));
-  }, []);
+  }, [boardName]);
 
   // const handleSubmit = (e) => {
   //   e.preventDefault();
@@ -51,7 +47,7 @@ function AddNewSprint() {
 
     try {
       const response = await fetch(
-        `http://localhost:3000/addSprintName?boardName=${boardDetails?.boardName}`,
+        `http://localhost:3000/addSprintName?boardName=${boardName}`,
         {
           method: "PUT",
           headers: {

@@ -1,4 +1,4 @@
-import { createContext, StrictMode } from "react";
+import { createContext, StrictMode, useState } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.jsx";
@@ -18,22 +18,28 @@ const router = createBrowserRouter([
     errorElement: <NotFound />,
   },
   {
-    path: "/board/:boardId",
+    path: "/board/:boardName",
     element: <App />,
     errorElement: <NotFound />,
   },
   {
-    path: "/manage-team",
+    path: "/:boardName/manage-team",
     element: <TeamAndSprintManager />,
     errorElement: <NotFound />,
   },
 ]);
 
-createRoot(document.getElementById("root")).render(
-  <StrictMode>
-    <BoardContext.Provider value={{ boardName: "Board-3" }}>
-      <RouterProvider router={router} />
-      <ToastContainer />
-    </BoardContext.Provider>
-  </StrictMode>
-);
+function Main() {
+  const [boardName, setBoardName] = useState("");
+
+  return (
+    <StrictMode>
+      <BoardContext.Provider value={{ boardName, setBoardName }}>
+        <RouterProvider router={router} />
+        <ToastContainer />
+      </BoardContext.Provider>
+    </StrictMode>
+  );
+}
+
+createRoot(document.getElementById("root")).render(<Main />);

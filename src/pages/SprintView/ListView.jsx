@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useParams } from "react-router";
 // import { CogIcon } from "../icons/CogIcon";
 // import { NavLink } from "react-router";
 import UseAnimations from "react-useanimations";
@@ -13,16 +14,17 @@ function ListView({
   selectedCard = {},
   additionalStepNames = [],
 }) {
+  const { boardName } = useParams();
   const [teamCards, setTeamCards] = useState([]);
 
   useEffect(() => {
-    fetch(`http://localhost:3000/team`)
+    fetch(`http://localhost:3000/team?boardName=${boardName}`)
       .then((response) => response.json())
       .then((data) => {
         setTeamCards(data);
       })
       .catch((err) => console.error(err));
-  }, []);
+  }, [boardName]);
 
   // const additionalStages = 3;
   // const teamCards = TeamData;

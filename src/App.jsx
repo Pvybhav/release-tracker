@@ -1,17 +1,28 @@
 import "./App.css";
-import { NavLink, Outlet } from "react-router";
+import { NavLink, Outlet, useParams } from "react-router";
 import SprintView from "./pages/SprintView";
 import { CogIcon } from "./icons/CogIcon";
 import { HomeIcon } from "./icons/HomeIcon";
+import { useContext, useEffect } from "react";
+import { BoardContext } from "./main";
 
 function App() {
+  const boardDetails = useContext(BoardContext);
+  const { boardName } = useParams();
+
+  useEffect(() => {
+    if (boardName) {
+      boardDetails?.setBoardName(boardName);
+    }
+  }, [boardDetails, boardName]);
+
   return (
     <div>
       <header className="flex items-center justify-between px-4 py-2 mt-2 text-white bg-blue-500 rounded-xl">
         <h1 className="mx-auto text-xl font-bold">Release Tracker</h1>
 
         <NavLink
-          to="/manage-team"
+          to={`/${boardName}/manage-team`}
           className="flex items-center justify-end mx-2 text-white hover:text-yellow-300 hover:underline"
         >
           <CogIcon className="w-5 h-5" />

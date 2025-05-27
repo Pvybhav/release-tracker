@@ -3,22 +3,25 @@ import ChartView from "./ChartView";
 import Header from "./Header";
 import ListView from "./ListView";
 import Boards from "../Board";
+import { useParams } from "react-router";
 
 const ADDITIONAL_STAGES = 3;
 const ADDITIONAL_STEP_NAMES = ["PR-IP", "FR", "QG"];
 
 function SprintView() {
+  const { boardName } = useParams();
+
   const [selectedCard, setSelectedCard] = useState(null);
   const [sprintDetails, setSprintDetails] = useState({});
 
   useEffect(() => {
-    fetch(`http://localhost:3000/getSprintDetails`)
+    fetch(`http://localhost:3000/getSprintDetails?boardName=${boardName}`)
       .then((response) => response.json())
       .then((data) => {
         setSprintDetails(data);
       })
       .catch((err) => console.error(err));
-  }, []);
+  }, [boardName]);
 
   return (
     <div>

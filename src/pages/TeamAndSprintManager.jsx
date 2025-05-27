@@ -1,15 +1,21 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import AddNewTeam from "./AddNewTeam";
 import TeamList from "./TeamList";
 import AddNewSprint from "./AddNewSprint";
 import { BoardContext } from "../main";
+import { useParams } from "react-router";
 // import SprintList from "./SprintList";
 
-const addIds = (teams) =>
-  teams.map((team) => ({ ...team, id: crypto.randomUUID(), editing: false }));
-
-function TeamAndSprintManager(props) {
+function TeamAndSprintManager() {
   const boardDetails = useContext(BoardContext);
+
+  const { boardName } = useParams();
+
+  useEffect(() => {
+    if (boardName) {
+      boardDetails?.setBoardName(boardName);
+    }
+  }, [boardDetails, boardName]);
 
   const [refreshRequired, setRefreshRequired] = useState(true);
   const [teams, setTeams] = useState([]);
@@ -41,7 +47,7 @@ function TeamAndSprintManager(props) {
     const fetchTeams = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/team?boardName=${boardDetails?.boardName}`,
+          `http://localhost:3000/team?boardName=${boardName}`,
           {
             method: "GET",
           }
@@ -68,7 +74,11 @@ function TeamAndSprintManager(props) {
           />
         </div>
         <div className="mt-4">
-          <AddNewSprint sprints={sprints} setSprints={setSprints} />
+          <AddNewSprint
+            sprints={sprints}
+            setSprints={setSprints}
+            boardName={boardName}
+          />
         </div>
       </div>
       <div className="col-span-8 mt-4 bg-gray-100 rounded-lg">
