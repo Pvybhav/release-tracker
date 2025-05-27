@@ -76,7 +76,7 @@ app.post("/team", (req, res) => {
   }
 
   const newTeam = req.body;
-  const isTeamNameExists = selectedBoard?.teams.find(
+  const isTeamNameExists = selectedBoard?.teams?.find(
     (team) => team.teamName === newTeam.teamName
   );
 
@@ -88,7 +88,7 @@ app.post("/team", (req, res) => {
   }
 
   const updatedTeams = [
-    ...selectedBoard.teams,
+    ...(selectedBoard?.teams || []),
     {
       ...newTeam,
       id: crypto.randomUUID(),
