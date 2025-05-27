@@ -10,6 +10,7 @@ function AddNewSprint({ boardName }) {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
+    number: "",
     startDate: new Date(),
     endDate: new Date(),
   });
@@ -112,6 +113,25 @@ function AddNewSprint({ boardName }) {
               }
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="Enter Sprint Name"
+              required
+            />
+          </div>
+          <div className="mb-5">
+            <label
+              htmlFor="number"
+              className="block mb-2 text-sm font-medium text-left text-gray-900 dark:text-white"
+            >
+              Sprint Number
+            </label>
+            <input
+              type="number"
+              id="number"
+              value={formData.number}
+              onChange={(e) =>
+                setFormData({ ...formData, number: e.target.value })
+              }
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Enter Sprint Number"
               required
             />
           </div>
