@@ -73,7 +73,7 @@ function TeamAndSprintManager() {
             setRefreshRequired={setRefreshRequired}
           />
         </div>
-        <div className="mt-4">
+        <div className="mt-2">
           <AddNewSprint
             sprints={sprints}
             setSprints={setSprints}

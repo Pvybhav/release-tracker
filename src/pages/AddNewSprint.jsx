@@ -93,7 +93,7 @@ function AddNewSprint({ boardName }) {
             {isEditing ? "Edit Sprint Details" : "Add Sprint Details"}
           </h2>
         </div>
-        <hr className="w-full my-2 border-t-2 border-gray-400 border-dashed" />
+        {/* <hr className="w-full my-2 border-t-2 border-gray-400 border-dashed" /> */}
 
         <form className="px-4 py-2" onSubmit={handleSubmit}>
           <div className="mb-5">
@@ -111,7 +111,7 @@ function AddNewSprint({ boardName }) {
                 setFormData({ ...formData, name: e.target.value })
               }
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="Enter sprint name"
+              placeholder="Enter Sprint Name"
               required
             />
           </div>

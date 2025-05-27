@@ -92,7 +92,6 @@ app.post("/team", (req, res) => {
     {
       ...newTeam,
       id: crypto.randomUUID(),
-      currentStep: 1,
       editing: false,
     },
   ];

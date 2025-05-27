@@ -8,6 +8,7 @@ function AddNewTeam({ setRefreshRequired }) {
   const [formData, setFormData] = useState({
     teamName: "",
     noOfPRs: "",
+    currentStep: 1,
   });
 
   const handleSubmit = async (e) => {
@@ -35,6 +36,7 @@ function AddNewTeam({ setRefreshRequired }) {
         setFormData({
           teamName: "",
           noOfPRs: "",
+          currentStep: 1,
         });
         setRefreshRequired(true);
         toast.success("Team added successfully");
@@ -48,6 +50,7 @@ function AddNewTeam({ setRefreshRequired }) {
     setFormData({
       teamName: "",
       noOfPRs: "",
+      currentStep: 1,
     });
   };
 
@@ -61,12 +64,12 @@ function AddNewTeam({ setRefreshRequired }) {
   };
 
   return (
-    <div className="flex items-center justify-center py-4 h-fit">
+    <div className="flex items-center justify-center py-2 h-fit">
       <div className="flex flex-col justify-center w-full max-w-full mx-5 my-auto overflow-hidden bg-gray-100 rounded-lg shadow-md h-fit">
         <div className="px-4 py-1">
           <h2 className="text-lg font-bold text-gray-800">Add New Team</h2>
         </div>
-        <hr className="w-full my-2 border-t-2 border-gray-400 border-dashed" />
+        {/* <hr className="w-full my-2 border-t-2 border-gray-400 border-dashed" /> */}
         <form className="px-4 py-2" onSubmit={handleSubmit}>
           <div className="mb-5">
             <label
@@ -84,6 +87,25 @@ function AddNewTeam({ setRefreshRequired }) {
               }
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="Enter team name"
+              required
+            />
+          </div>
+          <div className="mb-5">
+            <label
+              htmlFor="currentStep"
+              className="block mb-2 text-sm font-medium text-left text-gray-900 dark:text-white"
+            >
+              Current Step
+            </label>
+            <input
+              type="number"
+              id="currentStep"
+              value={formData.currentStep}
+              onChange={(e) =>
+                setFormData({ ...formData, currentStep: e.target.value })
+              }
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Enter Current Step"
               required
             />
           </div>

@@ -128,7 +128,7 @@ function TeamList({ teams, setTeams }) {
             <div className="font-bold">Current Step</div>
             <div className="font-bold">Actions</div>
           </div>
-          <ul className="w-full max-h-[70vh] overflow-y-scroll">
+          <ul className="w-full max-h-[70vh]">
             {teams.map((team, index) => (
               <li
                 key={team.id}
