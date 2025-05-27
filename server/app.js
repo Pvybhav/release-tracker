@@ -274,7 +274,7 @@ app.post("/addBoard", (req, res) => {
 });
 
 app.get("/boards", (req, res) => {
-  ensureFileExists(boardsJSONPath, {});
+  ensureFileExists(boardsJSONPath, []);
 
   const singleSprintJSON = safeJSONParse(boardsJSONPath);
   if (singleSprintJSON === null) {
