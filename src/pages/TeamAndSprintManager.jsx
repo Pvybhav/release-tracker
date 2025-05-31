@@ -7,6 +7,7 @@ import { useParams } from "react-router";
 import { NavLink } from "react-router";
 import { CogIcon } from "../icons/CogIcon";
 import { HomeIcon } from "../icons/HomeIcon";
+import AppHeader from "../Components/AppHeader";
 // import SprintList from "./SprintList";
 
 function TeamAndSprintManager() {
@@ -68,27 +69,7 @@ function TeamAndSprintManager() {
 
   return (
     <div>
-      <header className="flex items-center justify-between px-4 py-2 mt-2 text-white bg-blue-500 rounded-xl">
-        <h1 className="mx-auto text-xl font-bold">Release Tracker</h1>
-
-        <NavLink
-          to={`/${boardName}/manage-team`}
-          className="flex items-center justify-end mx-2 text-white hover:text-yellow-300 hover:underline"
-        >
-          <CogIcon className="w-5 h-5" />
-          <span>Manage Team</span>
-        </NavLink>
-
-        <div className="w-px h-5 mx-2 bg-white" />
-
-        <NavLink
-          to="/"
-          className="flex items-center justify-end px-2 text-white hover:text-yellow-300 hover:underline"
-        >
-          <HomeIcon className="w-5 h-5" />
-          <span>Home</span>
-        </NavLink>
-      </header>
+      <AppHeader boardName={boardName} />
       <div className="grid w-full grid-cols-12 gap-2">
         <div className="col-span-4">
           <div>
