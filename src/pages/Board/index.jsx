@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 import { toast } from "react-toastify";
 import { HomeIcon } from "../../icons/HomeIcon";
 import AppHeader from "../../Components/AppHeader";
+import NoBoardsImage from "../../assets/no-boards.png";
 
 function Board({ title, description }) {
   return (
@@ -101,11 +102,32 @@ function Boards() {
     <div>
       <AppHeader />
       <div className="flex flex-col items-center m-4">
+        {boards?.length === 0 && (
+          <div className="flex justify-center">
+            <img
+              src={NoBoardsImage}
+              alt="No Boards Available"
+              className="object-contain w-3/4 h-4/5"
+            />
+          </div>
+        )}
         <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
           {boards.map(({ id, title, description }) => (
             <Board key={id} title={title} description={description} id={id} />
           ))}
         </div>
+        {!showAddBoardForm ? (
+          <div className="flex flex-row items-center justify-center">
+            No boards available. Click&nbsp;
+            <span
+              onClick={addBoard}
+              className="text-blue-500 !underline cursor-pointer hover:text-blue-700 hover:underline"
+            >
+              Add Board
+            </span>
+            &nbsp;to add new board
+          </div>
+        ) : null}
         {showAddBoardForm ? (
           !isAuthenticated ? (
             <form
@@ -173,14 +195,7 @@ function Boards() {
               </div>
             </form>
           )
-        ) : (
-          <button
-            className="px-4 py-2 mt-4 text-white bg-blue-500 rounded-lg"
-            onClick={addBoard}
-          >
-            Add Board
-          </button>
-        )}
+        ) : null}
       </div>
     </div>
   );
