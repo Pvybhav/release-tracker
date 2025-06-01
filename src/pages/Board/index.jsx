@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { NavLink, UNSAFE_decodeViaTurboStream } from "react-router-dom";
-import { toast } from "react-toastify";
+import { NavLink } from "react-router-dom";
 import { HomeIcon } from "../../icons/HomeIcon";
 import AppHeader from "../../Components/AppHeader";
 import NoBoardsImage from "../../assets/no-boards.png";
 import Modal from "../../Components/Modal";
+import { toast } from "react-toastify";
 
 function Board({ title, description }) {
   return (
@@ -42,18 +42,47 @@ function Boards() {
     password: "",
   });
   const [isAddBoardModalOpen, setIsAddBoardModalOpen] = useState(false);
+  const [isTitleValid, setIsTitleValid] = useState(true);
+  const [isDescriptionValid, setIsDescriptionValid] = useState(true);
+  const [isPasswordValid, setIsPasswordValid] = useState(true);
 
   const addBoard = () => {
     setIsAddBoardModalOpen(true);
   };
 
   const handleNewBoardChange = (e) => {
-    setNewBoard({ ...newBoard, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    if (name === "title") {
+      setIsTitleValid(true);
+    }
+    if (name === "description") {
+      setIsDescriptionValid(true);
+    }
+    if (name === "password") {
+      setIsPasswordValid(true);
+    }
+    setNewBoard({ ...newBoard, [name]: value });
   };
 
   const handleAddBoardSubmit = async (e) => {
     e.preventDefault();
-    setIsAddBoardModalOpen(false);
+    if (
+      newBoard.title.trim().length === 0 ||
+      newBoard.description.trim().length === 0 ||
+      newBoard.password.trim().length === 0
+    ) {
+      const { title, description, password } = newBoard;
+      if (title.trim().length === 0) {
+        setIsTitleValid(false);
+      }
+      if (description.trim().length === 0) {
+        setIsDescriptionValid(false);
+      }
+      if (password.trim().length === 0) {
+        setIsPasswordValid(false);
+      }
+      return;
+    }
     try {
       const response = await fetch("http://localhost:3000/addBoard", {
         method: "POST",
@@ -71,12 +100,12 @@ function Boards() {
         throw new Error("Failed to add board");
       } else {
         setBoards([...boards, addedBoard]);
-        toast.success("Board added successfully");
+        setIsAddBoardModalOpen(false);
       }
     } catch (error) {
       toast.error(error.message);
     } finally {
-      setNewBoard({ title: "", description: "" });
+      setNewBoard({ title: "", description: "", password: "" });
     }
   };
 
@@ -136,7 +165,9 @@ function Boards() {
                 value={newBoard.title}
                 onChange={handleNewBoardChange}
                 placeholder="Enter Board Title"
-                className="w-full px-4 py-2 mb-2 border border-gray-300 rounded-lg"
+                className={`w-full px-4 py-2 border ${
+                  isTitleValid ? "border-gray-300" : "border-red-500"
+                } rounded-lg`}
               />
               <input
                 type="text"
@@ -144,7 +175,9 @@ function Boards() {
                 value={newBoard.description}
                 onChange={handleNewBoardChange}
                 placeholder="Enter Board Description"
-                className="w-full px-4 py-2 mb-2 border border-gray-300 rounded-lg"
+                className={`w-full px-4 py-2 mt-2 border ${
+                  isDescriptionValid ? "border-gray-300" : "border-red-500"
+                } rounded-lg`}
               />
               <input
                 type="password"
@@ -153,7 +186,9 @@ function Boards() {
                 onChange={handleNewBoardChange}
                 placeholder="Enter Board Password"
                 autoComplete="off"
-                className="w-full px-4 py-2 mb-2 border border-gray-300 rounded-lg"
+                className={`w-full px-4 py-2 mt-2 border ${
+                  isPasswordValid ? "border-gray-300" : "border-red-500"
+                } rounded-lg`}
               />
             </form>
           }
