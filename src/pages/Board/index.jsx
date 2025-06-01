@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, UNSAFE_decodeViaTurboStream } from "react-router-dom";
 import { toast } from "react-toastify";
 import { HomeIcon } from "../../icons/HomeIcon";
 import AppHeader from "../../Components/AppHeader";
 import NoBoardsImage from "../../assets/no-boards.png";
+import Modal from "../../Components/Modal";
 
 function Board({ title, description }) {
   return (
@@ -35,14 +36,15 @@ function Boards() {
     fetchBoards();
   }, []);
 
-  const [newBoard, setNewBoard] = useState({ title: "", description: "" });
-  const [showAddBoardForm, setShowAddBoardForm] = useState(false);
-  const [password, setPassword] = useState("");
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [newBoard, setNewBoard] = useState({
+    title: "",
+    description: "",
+    password: "",
+  });
+  const [isAddBoardModalOpen, setIsAddBoardModalOpen] = useState(false);
 
   const addBoard = () => {
-    setShowAddBoardForm(true);
-    setIsAuthenticated(false);
+    setIsAddBoardModalOpen(true);
   };
 
   const handleNewBoardChange = (e) => {
@@ -51,6 +53,7 @@ function Boards() {
 
   const handleAddBoardSubmit = async (e) => {
     e.preventDefault();
+    setIsAddBoardModalOpen(false);
     try {
       const response = await fetch("http://localhost:3000/addBoard", {
         method: "POST",
@@ -74,33 +77,17 @@ function Boards() {
       toast.error(error.message);
     } finally {
       setNewBoard({ title: "", description: "" });
-      setShowAddBoardForm(false);
     }
   };
 
   const cancelAddBoard = () => {
-    setNewBoard({ title: "", description: "" });
-    setShowAddBoardForm(false);
-  };
-
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
-
-  const handlePasswordSubmit = (e) => {
-    e.preventDefault();
-    if (password === "password") {
-      setIsAuthenticated(true);
-      setPassword("");
-    } else {
-      alert("Incorrect password");
-      setPassword("");
-    }
+    setNewBoard({ title: "", description: "", password: "" });
+    setIsAddBoardModalOpen(false);
   };
 
   return (
     <div>
-      <AppHeader />
+      <AppHeader createNewBoard={() => addBoard()} showAddBoardLink />
       <div className="flex flex-col items-center m-4">
         {boards?.length === 0 && (
           <div className="flex justify-center">
@@ -116,48 +103,29 @@ function Boards() {
             <Board key={id} title={title} description={description} id={id} />
           ))}
         </div>
-        {!showAddBoardForm ? (
-          <div className="flex flex-row items-center justify-center">
-            No boards available. Click&nbsp;
-            <span
-              onClick={addBoard}
-              className="text-blue-500 !underline cursor-pointer hover:text-blue-700 hover:underline"
-            >
-              Add Board
-            </span>
-            &nbsp;to add new board
-          </div>
-        ) : null}
-        {showAddBoardForm ? (
-          !isAuthenticated ? (
-            <form
-              className="flex flex-col items-center mt-4"
-              onSubmit={handlePasswordSubmit}
-            >
-              <input
-                type="password"
-                value={password}
-                onChange={handlePasswordChange}
-                placeholder="Enter password"
-                className="px-4 py-2 mb-2 border border-gray-300 rounded-lg"
-              />
-              <div className="flex space-x-4">
-                <button
-                  type="submit"
-                  className="px-4 py-2 text-white bg-blue-500 rounded-lg"
-                >
-                  Authenticate
-                </button>
-                <button
-                  type="button"
-                  className="px-4 py-2 text-white bg-red-500 rounded-lg"
-                  onClick={cancelAddBoard}
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
-          ) : (
+        {!isAddBoardModalOpen ? (
+          boards?.length === 0 ? (
+            <div className="flex flex-row items-center justify-center">
+              No boards available. Click&nbsp;
+              <span
+                onClick={addBoard}
+                className="text-blue-500 !underline cursor-pointer hover:text-blue-700 hover:underline"
+              >
+                Add Board
+              </span>
+              &nbsp;to add new board
+            </div>
+          ) : null
+        ) : (
+          ""
+        )}
+      </div>
+      {isAddBoardModalOpen && (
+        <Modal
+          open={isAddBoardModalOpen}
+          setOpen={setIsAddBoardModalOpen}
+          title={"Add New Board"}
+          children={
             <form
               className="flex flex-col items-center mt-4"
               onSubmit={handleAddBoardSubmit}
@@ -167,36 +135,32 @@ function Boards() {
                 name="title"
                 value={newBoard.title}
                 onChange={handleNewBoardChange}
-                placeholder="Enter board title"
-                className="px-4 py-2 mb-2 border border-gray-300 rounded-lg"
+                placeholder="Enter Board Title"
+                className="w-full px-4 py-2 mb-2 border border-gray-300 rounded-lg"
               />
               <input
                 type="text"
                 name="description"
                 value={newBoard.description}
                 onChange={handleNewBoardChange}
-                placeholder="Enter board description"
-                className="px-4 py-2 mb-2 border border-gray-300 rounded-lg"
+                placeholder="Enter Board Description"
+                className="w-full px-4 py-2 mb-2 border border-gray-300 rounded-lg"
               />
-              <div className="flex space-x-4">
-                <button
-                  type="submit"
-                  className="px-4 py-2 text-white bg-blue-500 rounded-lg"
-                >
-                  Add Board
-                </button>
-                <button
-                  type="button"
-                  className="px-4 py-2 text-white bg-red-500 rounded-lg"
-                  onClick={cancelAddBoard}
-                >
-                  Cancel
-                </button>
-              </div>
+              <input
+                type="password"
+                name="password"
+                value={newBoard.password}
+                onChange={handleNewBoardChange}
+                placeholder="Enter Board Password"
+                autoComplete="off"
+                className="w-full px-4 py-2 mb-2 border border-gray-300 rounded-lg"
+              />
             </form>
-          )
-        ) : null}
-      </div>
+          }
+          handleSubmit={handleAddBoardSubmit}
+          handleCancel={cancelAddBoard}
+        />
+      )}
     </div>
   );
 }
