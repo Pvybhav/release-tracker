@@ -11,6 +11,7 @@ function Modal({
   handleCancel = () => {},
   title = "",
   children = "",
+  submitButtonText = "Submit",
 }) {
   return (
     <Dialog open={open} onClose={handleCancel} className="relative z-10">
@@ -48,7 +49,7 @@ function Modal({
                 onClick={handleSubmit}
                 className="inline-flex justify-center w-full px-3 py-2 text-sm font-semibold text-white bg-green-600 rounded-md shadow-xs hover:bg-green-500 sm:ml-3 sm:w-auto"
               >
-                Create
+                {submitButtonText}
               </button>
               <button
                 type="button"

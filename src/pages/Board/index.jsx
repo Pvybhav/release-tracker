@@ -6,17 +6,74 @@ import NoBoardsImage from "../../assets/no-boards.png";
 import Modal from "../../Components/Modal";
 import { toast } from "react-toastify";
 
-function Board({ title, description }) {
+function Board({ title, description, password }) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [enteredPassword, setEnteredPassword] = useState("");
+  const [isPasswordValid, setIsPasswordValid] = useState(true);
+
+  const handleCardClick = () => {
+    setIsModalOpen(true);
+  };
+
+  const handlePasswordChange = (e) => {
+    setEnteredPassword(e.target.value);
+    setIsPasswordValid(true);
+  };
+
+  const handlePasswordSubmit = (e) => {
+    e.preventDefault();
+    if (enteredPassword !== password) {
+      setIsPasswordValid(false);
+      return;
+    }
+    setIsModalOpen(false);
+    const boardPath = `/board/${title}`;
+    window.location.href = boardPath;
+  };
+
   return (
-    <NavLink
-      to={`/board/${title}`}
-      className="flex flex-col p-4 bg-white rounded-lg shadow-lg min-w-80 hover:bg-gray-100"
-    >
-      <div className="flex flex-col items-center justify-between mb-4">
-        <h2 className="text-lg font-bold">{title}</h2>
-        <p className="text-gray-600">{description}</p>
+    <>
+      <div
+        onClick={handleCardClick}
+        className="flex flex-col p-4 bg-white rounded-lg shadow-lg cursor-pointer min-w-80 hover:bg-gray-100"
+      >
+        <div className="flex flex-col items-center justify-between mb-4">
+          <h2 className="text-lg font-bold">{title}</h2>
+          <p className="text-gray-600">{description}</p>
+        </div>
       </div>
-    </NavLink>
+      {isModalOpen && (
+        <Modal
+          open={isModalOpen}
+          handleCancel={() => setIsModalOpen(false)}
+          submitButtonText="Open"
+          handleSubmit={handlePasswordSubmit}
+          title="Enter Board Password To View Board"
+        >
+          <form
+            className="flex flex-col items-center mt-4"
+            onSubmit={handlePasswordSubmit}
+          >
+            {!isPasswordValid && (
+              <p className="mt-2 mb-4 text-center text-red-500">
+                The password is incorrect. Please try again.
+              </p>
+            )}
+
+            <input
+              type="password"
+              value={enteredPassword}
+              onChange={handlePasswordChange}
+              placeholder="Enter Board Password"
+              autoComplete="off"
+              className={`w-full px-4 py-2 border ${
+                isPasswordValid ? "border-gray-300" : "border-red-500"
+              } rounded-lg`}
+            />
+          </form>
+        </Modal>
+      )}
+    </>
   );
 }
 
@@ -128,8 +185,14 @@ function Boards() {
           </div>
         )}
         <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-          {boards.map(({ id, title, description }) => (
-            <Board key={id} title={title} description={description} id={id} />
+          {boards.map(({ id, title, description, password }) => (
+            <Board
+              key={id}
+              title={title}
+              description={description}
+              id={id}
+              password={password}
+            />
           ))}
         </div>
         {!isAddBoardModalOpen ? (
