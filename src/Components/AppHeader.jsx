@@ -15,7 +15,7 @@ function AppHeader({
       {showAddBoardLink ? (
         <span
           onClick={createNewBoard}
-          className="flex items-center justify-end mx-2 text-white hover:text-yellow-300 hover:underline"
+          className="flex items-center justify-end mx-2 text-white cursor-pointer hover:text-yellow-300 hover:underline "
         >
           Add New Board
         </span>
