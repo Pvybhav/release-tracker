@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router";
+import { NavLink, useParams } from "react-router";
 // import { CogIcon } from "../icons/CogIcon";
 // import { NavLink } from "react-router";
 import UseAnimations from "react-useanimations";
 import arrowDown from "react-useanimations/lib/arrowDown";
 import arrowUp from "react-useanimations/lib/arrowUp";
 // import TeamData from "../data/TeamData";
+import NoTeamsImage from "../../assets/no-teams.jpg";
 
 function ListView({
   sprintDetails = {},
@@ -60,11 +61,25 @@ function ListView({
 
   if (teamCards?.length === 0)
     return (
-      <div className="flex flex-col items-center justify-center h-full">
-        <div className="w-full p-8 bg-white rounded-lg shadow-lg py-28">
-          <p className="text-3xl font-bold text-center">No teams found</p>
+      <>
+        <div className="flex justify-center">
+          <img
+            src={NoTeamsImage}
+            alt="No Teams Available"
+            className="object-contain w-1/4 h-4/5"
+          />
         </div>
-      </div>
+        <div className="flex flex-row items-center justify-center">
+          No teams available. Click&nbsp;
+          <NavLink
+            to={`/${boardName}/manage-team`}
+            className="flex items-center justify-end text-blue-600 hover:text-blue-800 hover:underline"
+          >
+            <span>Add Team</span>
+          </NavLink>
+          &nbsp;to add new team
+        </div>
+      </>
     );
   return (
     <div className="flex flex-col w-full h-[75vh]">
