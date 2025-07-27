@@ -1,12 +1,16 @@
-import React, { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import { HomeIcon } from "../../icons/HomeIcon";
 import AppHeader from "../../Components/AppHeader";
 import NoBoardsImage from "../../assets/no-boards.png";
 import Modal from "../../Components/Modal";
 import { toast } from "react-toastify";
+import { BoardContext } from "../../main";
 
 function Board({ title, description, password }) {
+  const navigate = useNavigate();
+  const boardDetails = useContext(BoardContext);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [enteredPassword, setEnteredPassword] = useState("");
   const [isPasswordValid, setIsPasswordValid] = useState(true);
@@ -28,7 +32,8 @@ function Board({ title, description, password }) {
     }
     setIsModalOpen(false);
     const boardPath = `/board/${title}`;
-    window.location.href = boardPath;
+    boardDetails?.setBoardName(title);
+    navigate(boardPath);
   };
 
   return (
